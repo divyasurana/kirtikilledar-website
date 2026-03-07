@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Music, Video } from 'lucide-react';
 import { siteData } from '../data/mockData';
+import AudioPlayer from '../components/AudioPlayer';
+import VideoPlayer from '../components/VideoPlayer';
 
 const Work = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -80,9 +82,17 @@ const Work = () => {
                 {/* Project Info */}
                 <div>
                   <div className="flex justify-between items-start mb-3">
-                    <span className="text-xs tracking-[0.3em] uppercase text-vintage-gold font-light">
-                      {project.type}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs tracking-[0.3em] uppercase text-vintage-gold font-light">
+                        {project.type}
+                      </span>
+                      {project.mediaType === 'audio' && (
+                        <Music size={14} className="text-vintage-gold" strokeWidth={1.5} />
+                      )}
+                      {project.mediaType === 'video' && (
+                        <Video size={14} className="text-vintage-gold" strokeWidth={1.5} />
+                      )}
+                    </div>
                     <span className="text-sm text-sepia-dark/50 font-light">{project.year}</span>
                   </div>
                   
@@ -95,7 +105,9 @@ const Work = () => {
                   </p>
                   
                   <div className="flex items-center gap-2 text-warm-brown group-hover:text-vintage-gold transition-colors duration-300">
-                    <span className="text-sm tracking-wider uppercase font-light">View Project</span>
+                    <span className="text-sm tracking-wider uppercase font-light">
+                      {project.mediaType === 'audio' ? 'Listen & View Details' : 'Watch & View Details'}
+                    </span>
                     <span className="text-lg">→</span>
                   </div>
                 </div>
@@ -146,6 +158,29 @@ const Work = () => {
                     className="w-full h-[500px] object-cover grayscale-[20%] sepia-[10%]"
                   />
                 </div>
+
+                {/* Media Player */}
+                {selectedProject.mediaType && (
+                  <div className="mb-12">
+                    <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light flex items-center gap-4">
+                      <div className="w-8 h-0.5 bg-vintage-gold"></div>
+                      {selectedProject.mediaType === 'audio' ? 'Audio Recording' : 'Performance Reel'}
+                    </h3>
+                    
+                    {selectedProject.mediaType === 'audio' ? (
+                      <AudioPlayer 
+                        url={selectedProject.mediaUrl}
+                        title={selectedProject.title}
+                      />
+                    ) : (
+                      <VideoPlayer 
+                        url={selectedProject.mediaUrl}
+                        title={selectedProject.title}
+                        thumbnail={selectedProject.image}
+                      />
+                    )}
+                  </div>
+                )}
 
                 {/* Project Summary */}
                 <div className="mb-12">

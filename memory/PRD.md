@@ -97,11 +97,14 @@ Build a website for Kirti Killedar, an ace singer and budding actress, with:
 - **Skills/Areas of Practice:** Structured list
 - **Portrait & Quote:** Large image with inspirational quote
 
-### ✅ Work Page
+### ✅ Work Page (WITH MEDIA PLAYERS)
 - **Project Grid:** 2-column layout with hover effects
+- **Media Indicators:** Music 🎵 and Video 🎬 icons on project cards
 - **Project Cards:** Title, type, year, description, sepia images
 - **Expandable Detail Modal:** 
   - Project summary
+  - **Audio Player:** Custom vintage-styled player with play/pause, seek bar, time display, mute controls
+  - **Video Player:** YouTube/external video embed with vintage thumbnail overlay
   - Creative process description
   - Behind-the-scenes notes
   - Full-screen vintage-framed view
@@ -165,9 +168,11 @@ All content currently uses mock data from `/app/frontend/src/data/mockData.js`:
 ### Key Components:
 - `Navigation.jsx` - Fixed header with responsive menu
 - `Footer.jsx` - Vintage-styled footer
+- `AudioPlayer.jsx` - Custom audio player with vintage styling
+- `VideoPlayer.jsx` - Video player with thumbnail and ReactPlayer integration
 - `Home.jsx` - Multi-section landing page
 - `About.jsx` - Personal narrative layout
-- `Work.jsx` - Portfolio with modal details
+- `Work.jsx` - Portfolio with modal details and media players
 - `Gallery.jsx` - Filterable image grid with lightbox
 - `Writing.jsx` - Blog-style articles
 - `Contact.jsx` - Two-column contact page

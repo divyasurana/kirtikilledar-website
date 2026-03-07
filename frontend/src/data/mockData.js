@@ -33,7 +33,10 @@ Kirti believes in art as a form of quiet rebellion—a way to ask questions, to 
       year: "2024",
       description: "A contemplative exploration of Raga Yaman, performed at the Annual Classical Music Festival.",
       image: "https://images.unsplash.com/photo-1768935434380-48dd45098730",
-      category: "singing"
+      category: "singing",
+      mediaType: "audio",
+      mediaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      duration: "4:32"
     },
     {
       id: 2,
@@ -42,7 +45,10 @@ Kirti believes in art as a form of quiet rebellion—a way to ask questions, to 
       year: "2024",
       description: "Playing the lead role in a coming-of-age drama about a young woman finding her voice.",
       image: "https://images.unsplash.com/photo-1597169428801-7c1adf2623bd",
-      category: "acting"
+      category: "acting",
+      mediaType: "video",
+      mediaUrl: "https://www.youtube.com/watch?v=LXb3EKWsInQ",
+      duration: "2:15"
     },
     {
       id: 3,
@@ -51,7 +57,10 @@ Kirti believes in art as a form of quiet rebellion—a way to ask questions, to 
       year: "2023",
       description: "Recording original compositions that blend traditional folk melodies with contemporary arrangements.",
       image: "https://images.unsplash.com/photo-1677947226901-5164b32d5cfe",
-      category: "singing"
+      category: "singing",
+      mediaType: "audio",
+      mediaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      duration: "5:18"
     },
     {
       id: 4,
@@ -60,7 +69,10 @@ Kirti believes in art as a form of quiet rebellion—a way to ask questions, to 
       year: "2023",
       description: "A powerful one-woman play exploring themes of identity and belonging.",
       image: "https://images.unsplash.com/photo-1636153279424-cb5d1e00f5a2",
-      category: "acting"
+      category: "acting",
+      mediaType: "video",
+      mediaUrl: "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+      duration: "3:45"
     }
   ],
   
