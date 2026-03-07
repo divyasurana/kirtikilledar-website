@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, Link, useLocation } from 'react-router-dom';
-import { LogOut, Home as HomeIcon, User, Briefcase, Image as ImageIcon, Mail, MessageSquare, Upload } from 'lucide-react';
+import { LogOut, Home as HomeIcon, User, Briefcase, Image as ImageIcon, Mail, MessageSquare, Calendar } from 'lucide-react';
 import axios from 'axios';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminHome from '../components/admin/AdminHome';
@@ -9,6 +9,7 @@ import AdminProjects from '../components/admin/AdminProjects';
 import AdminGallery from '../components/admin/AdminGallery';
 import AdminContact from '../components/admin/AdminContact';
 import AdminSubmissions from '../components/admin/AdminSubmissions';
+import AdminEvents from '../components/admin/AdminEvents';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -56,6 +57,7 @@ const Admin = () => {
     { path: '/admin/about', icon: User, label: 'About' },
     { path: '/admin/projects', icon: Briefcase, label: 'Projects' },
     { path: '/admin/gallery', icon: ImageIcon, label: 'Gallery' },
+    { path: '/admin/events', icon: Calendar, label: 'Events' },
     { path: '/admin/contact', icon: Mail, label: 'Contact' },
     { path: '/admin/submissions', icon: MessageSquare, label: 'Messages' }
   ];
@@ -110,6 +112,7 @@ const Admin = () => {
           <Route path="/about" element={<AdminAbout />} />
           <Route path="/projects" element={<AdminProjects />} />
           <Route path="/gallery" element={<AdminGallery />} />
+          <Route path="/events" element={<AdminEvents />} />
           <Route path="/contact" element={<AdminContact />} />
           <Route path="/submissions" element={<AdminSubmissions />} />
         </Routes>

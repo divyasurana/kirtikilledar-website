@@ -68,6 +68,16 @@ async def get_status_checks():
     
     return status_checks
 
+# Public Events Endpoint
+@api_router.get("/events")
+async def get_public_events():
+    from datetime import datetime
+    # Get upcoming events only
+    events = await db.events.find({
+        "event_date": {"$gte": datetime.utcnow().isoformat()}
+    }).sort("event_date", 1).to_list(50)
+    return events
+
 # Include the routers in the main app
 app.include_router(api_router)
 app.include_router(admin_router)

@@ -189,3 +189,34 @@ async def mark_read(submission_id: str, user: dict = Depends(verify_token)):
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Submission not found")
     return {"message": "Marked as read"}
+
+# Events Management
+@router.get("/events")
+async def get_events(user: dict = Depends(verify_token)):
+    from server import db
+    events = await db.events.find().sort("event_date", 1).to_list(100)
+    return events
+
+@router.post("/events")
+async def create_event(data: dict, user: dict = Depends(verify_token)):
+    from server import db
+    data["id"] = str(uuid.uuid4())
+    data["created_at"] = datetime.utcnow()
+    await db.events.insert_one(data)
+    return {"message": "Event created", "id": data["id"]}
+
+@router.put("/events/{event_id}")
+async def update_event(event_id: str, data: dict, user: dict = Depends(verify_token)):
+    from server import db
+    result = await db.events.update_one({"id": event_id}, {"$set": data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return {"message": "Event updated"}
+
+@router.delete("/events/{event_id}")
+async def delete_event(event_id: str, user: dict = Depends(verify_token)):
+    from server import db
+    result = await db.events.delete_one({"id": event_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return {"message": "Event deleted"}

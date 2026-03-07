@@ -7,6 +7,7 @@ import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Work from "@/pages/Work";
 import Gallery from "@/pages/Gallery";
+import Events from "@/pages/Events";
 import Contact from "@/pages/Contact";
 import Admin from "@/pages/Admin";
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/work" element={<Work />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/events" element={<Events />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin/*" element={<Admin />} />
         </Routes>
