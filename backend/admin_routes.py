@@ -12,7 +12,9 @@ from pathlib import Path
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 security = HTTPBearer()
 
-SECRET_KEY = os.environ.get("JWT_SECRET", "kirti-secret-key-change-in-production-2024")
+SECRET_KEY = os.environ.get("JWT_SECRET")
+if not SECRET_KEY:
+    raise ValueError("JWT_SECRET environment variable must be set")
 ALGORITHM = "HS256"
 
 def create_access_token(data: dict):
