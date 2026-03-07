@@ -1,134 +1,195 @@
 import React, { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import { siteData } from '../data/mockData';
 
 const Work = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [filter, setFilter] = useState('all');
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     setIsVisible(true);
+    window.scrollTo(0, 0);
   }, []);
 
-  const filteredWork = filter === 'all' 
-    ? siteData.work 
-    : siteData.work.filter(item => item.category === filter);
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedProject]);
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-vintage-cream">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-white">
+      <section className="pt-32 pb-16 bg-vintage-paper">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="max-w-4xl">
-            <h1 className={`font-display text-5xl md:text-6xl lg:text-7xl text-charcoal mb-6 leading-tight transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              Work
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="flex items-center justify-center mb-8">
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+              <div className="w-3 h-3 border border-vintage-gold rotate-45 mx-4"></div>
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+            </div>
+            
+            <h1 className={`font-display text-6xl md:text-7xl text-warm-brown mb-8 leading-tight transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              Selected Work
             </h1>
-            <p className={`text-xl text-charcoal/70 leading-relaxed transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              A selection of recent performances, recordings, and creative projects.
+            
+            <p className={`text-xl text-sepia-dark/80 leading-relaxed italic max-w-2xl mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              A collection of performances, recordings, and creative endeavors—each an exploration of voice, character, and truth.
             </p>
+
+            <div className="flex items-center justify-center mt-8">
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+              <div className="w-3 h-3 border border-vintage-gold rotate-45 mx-4"></div>
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Filter Section */}
-      <section className="py-8 bg-white border-b border-charcoal/10">
+      {/* Projects Grid */}
+      <section className="py-20">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="flex gap-6 flex-wrap">
-            <button
-              onClick={() => setFilter('all')}
-              className={`text-sm tracking-wider uppercase transition-all duration-300 pb-1 ${
-                filter === 'all' 
-                  ? 'text-charcoal border-b-2 border-gold' 
-                  : 'text-charcoal/50 hover:text-charcoal'
-              }`}
-            >
-              All Work
-            </button>
-            <button
-              onClick={() => setFilter('singing')}
-              className={`text-sm tracking-wider uppercase transition-all duration-300 pb-1 ${
-                filter === 'singing' 
-                  ? 'text-charcoal border-b-2 border-gold' 
-                  : 'text-charcoal/50 hover:text-charcoal'
-              }`}
-            >
-              Music
-            </button>
-            <button
-              onClick={() => setFilter('acting')}
-              className={`text-sm tracking-wider uppercase transition-all duration-300 pb-1 ${
-                filter === 'acting' 
-                  ? 'text-charcoal border-b-2 border-gold' 
-                  : 'text-charcoal/50 hover:text-charcoal'
-              }`}
-            >
-              Acting
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Work Grid */}
-      <section className="py-16">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
-            {filteredWork.map((project, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 max-w-6xl mx-auto">
+            {siteData.work.map((project, index) => (
               <div
                 key={project.id}
-                className={`group transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                style={{ transitionDelay: `${index * 100}ms` }}
+                className={`group cursor-pointer transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: `${(index + 3) * 150}ms` }}
+                onClick={() => setSelectedProject(project)}
               >
-                <div className="overflow-hidden mb-6">
+                {/* Image */}
+                <div className="relative mb-6 overflow-hidden">
+                  <div className="absolute inset-0 border border-warm-brown/20 z-10 pointer-events-none"></div>
+                  
                   <img 
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-[400px] object-cover grayscale-[30%] sepia-[15%] transition-all duration-700 group-hover:grayscale-[10%] group-hover:scale-105"
                   />
+                  
+                  {/* Corner accents on hover */}
+                  <div className="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 border-vintage-gold opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  <div className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-vintage-gold opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                 </div>
                 
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <span className="text-xs tracking-widest uppercase text-gold mb-2 block">
+                {/* Project Info */}
+                <div>
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="text-xs tracking-[0.3em] uppercase text-vintage-gold font-light">
                       {project.type}
                     </span>
-                    <h3 className="text-2xl font-display text-charcoal group-hover:text-gold transition-colors duration-300">
-                      {project.title}
-                    </h3>
+                    <span className="text-sm text-sepia-dark/50 font-light">{project.year}</span>
                   </div>
-                  <span className="text-sm text-charcoal/50">{project.year}</span>
+                  
+                  <h3 className="text-2xl font-display text-warm-brown mb-3 leading-tight group-hover:text-vintage-gold transition-colors duration-300">
+                    {project.title}
+                  </h3>
+                  
+                  <p className="text-sepia-dark/70 leading-relaxed mb-4 font-light">
+                    {project.description}
+                  </p>
+                  
+                  <div className="flex items-center gap-2 text-warm-brown group-hover:text-vintage-gold transition-colors duration-300">
+                    <span className="text-sm tracking-wider uppercase font-light">View Project</span>
+                    <span className="text-lg">→</span>
+                  </div>
                 </div>
-                
-                <p className="text-charcoal/70 leading-relaxed">
-                  {project.description}
-                </p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          {filteredWork.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-charcoal/50 text-lg">No projects found in this category.</p>
+      {/* Project Detail Modal */}
+      {selectedProject && (
+        <div className="fixed inset-0 bg-warm-brown/95 z-50 overflow-y-auto animate-fadeIn">
+          <div className="min-h-screen py-12 px-6">
+            <div className="max-w-5xl mx-auto bg-vintage-cream relative">
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-6 right-6 z-10 text-warm-brown hover:text-vintage-gold transition-colors duration-300 bg-vintage-cream p-3 border border-warm-brown/20"
+                aria-label="Close"
+              >
+                <X size={24} />
+              </button>
+
+              {/* Content */}
+              <div className="p-8 lg:p-12">
+                {/* Header */}
+                <div className="mb-12">
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="text-xs tracking-[0.3em] uppercase text-vintage-gold font-light">
+                      {selectedProject.type}
+                    </span>
+                    <span className="text-sm text-sepia-dark/50 font-light">{selectedProject.year}</span>
+                  </div>
+                  
+                  <h2 className="text-4xl md:text-5xl font-display text-warm-brown mb-6 leading-tight">
+                    {selectedProject.title}
+                  </h2>
+                  
+                  <div className="w-20 h-0.5 bg-vintage-gold mb-6"></div>
+                </div>
+
+                {/* Main Image */}
+                <div className="relative mb-12">
+                  <div className="absolute inset-0 border border-warm-brown/20 z-10 pointer-events-none"></div>
+                  <img 
+                    src={selectedProject.image}
+                    alt={selectedProject.title}
+                    className="w-full h-[500px] object-cover grayscale-[20%] sepia-[10%]"
+                  />
+                </div>
+
+                {/* Project Summary */}
+                <div className="mb-12">
+                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light flex items-center gap-4">
+                    <div className="w-8 h-0.5 bg-vintage-gold"></div>
+                    Project Summary
+                  </h3>
+                  <p className="text-lg text-sepia-dark/80 leading-relaxed font-light">
+                    {selectedProject.description} This project represented an important exploration of {selectedProject.category === 'singing' ? 'musical expression and vocal technique' : 'character depth and emotional authenticity'}, allowing me to delve into {selectedProject.category === 'singing' ? 'the nuances of melody and rhythm' : 'the psychology of the character and their inner world'}.
+                  </p>
+                </div>
+
+                {/* Creative Process */}
+                <div className="mb-12 bg-vintage-paper p-8 border-l-2 border-vintage-gold">
+                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light">
+                    Creative Process
+                  </h3>
+                  <div className="space-y-4">
+                    <p className="text-sepia-dark/80 leading-relaxed font-light">
+                      The preparation for this project began with extensive research and observation. I spent weeks {selectedProject.category === 'singing' ? 'studying the raga, understanding its emotional landscape, and finding my own voice within its classical framework' : 'building the character from the inside out—observing real people, understanding their motivations, and finding the truth in their contradictions'}.
+                    </p>
+                    <p className="text-sepia-dark/80 leading-relaxed font-light">
+                      What moved me most about this work was discovering the moments of vulnerability—the places where technique gives way to pure emotion, where the performance becomes something more than performance.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Behind the Scenes */}
+                <div className="bg-antique-white p-8">
+                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-4 font-light">
+                    Behind the Scenes
+                  </h3>
+                  <p className="text-sepia-dark/70 italic leading-relaxed font-light">
+                    {selectedProject.category === 'singing' 
+                      ? '"The most challenging moment was finding the courage to let go of perfection and trust the silence between notes. That\'s where the music truly lives."'
+                      : '"The breakthrough came when I stopped trying to play the character and simply allowed myself to become her—to see the world through her eyes, to carry her burdens, to breathe her breath."'
+                    }
+                  </p>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
         </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-6 lg:px-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-display text-charcoal mb-6">
-            Interested in Collaborating?
-          </h2>
-          <p className="text-lg text-charcoal/70 mb-8 max-w-2xl mx-auto">
-            Always open to meaningful creative projects and performances.
-          </p>
-          <a 
-            href="/contact" 
-            className="inline-block px-8 py-3 bg-gold text-ivory hover:bg-gold/90 transition-all duration-300 text-sm tracking-wider uppercase"
-          >
-            Get in Touch
-          </a>
-        </div>
-      </section>
+      )}
     </div>
   );
 };

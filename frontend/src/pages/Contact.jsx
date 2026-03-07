@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Instagram, Mail } from 'lucide-react';
+import { Mail, Instagram } from 'lucide-react';
 import { siteData } from '../data/mockData';
 
 const Contact = () => {
@@ -13,11 +13,11 @@ const Contact = () => {
 
   useEffect(() => {
     setIsVisible(true);
+    window.scrollTo(0, 0);
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Mock form submission
     console.log('Form submitted:', formData);
     setSubmitted(true);
     setTimeout(() => {
@@ -34,143 +34,183 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-vintage-cream">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-white">
+      <section className="pt-32 pb-16 bg-vintage-paper">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="max-w-4xl">
-            <h1 className={`font-display text-5xl md:text-6xl lg:text-7xl text-charcoal mb-6 leading-tight transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              Contact
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="flex items-center justify-center mb-8">
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+              <div className="w-3 h-3 border border-vintage-gold rotate-45 mx-4"></div>
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+            </div>
+            
+            <h1 className={`font-display text-6xl md:text-7xl text-warm-brown mb-8 leading-tight transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              Let's Connect
             </h1>
-            <p className={`text-xl text-charcoal/70 leading-relaxed transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              {siteData.contact.description}
-            </p>
+            
+            <div className={`max-w-2xl mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <p className="text-xl text-sepia-dark/80 leading-relaxed mb-6">
+                I believe the best collaborations begin with genuine conversation.
+              </p>
+              <p className="text-lg text-sepia-dark/70 leading-relaxed italic">
+                Whether you have a project in mind, a question to ask, or simply wish to say hello—I would be delighted to hear from you.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center mt-8">
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+              <div className="w-3 h-3 border border-vintage-gold rotate-45 mx-4"></div>
+              <div className="w-16 h-0.5 bg-vintage-gold"></div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Form & Info */}
-      <section className="py-16">
+      {/* Main Content */}
+      <section className="py-20">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Contact Form */}
+          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            
+            {/* Contact Information */}
             <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-              <h2 className="text-2xl font-display text-charcoal mb-8">Send a Message</h2>
-              
-              {submitted ? (
-                <div className="bg-gold/10 border border-gold/30 p-8 text-center">
-                  <p className="text-charcoal text-lg">
-                    Thank you for reaching out! I'll get back to you soon.
+              <div className="space-y-12">
+                {/* Email */}
+                <div>
+                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light flex items-center gap-4">
+                    <div className="w-8 h-0.5 bg-vintage-gold"></div>
+                    Email
+                  </h3>
+                  <a 
+                    href={`mailto:${siteData.contact.email}`}
+                    className="text-2xl text-warm-brown hover:text-vintage-gold transition-colors duration-300 flex items-center gap-3 group"
+                  >
+                    <Mail size={24} strokeWidth={1.5} className="group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-light">{siteData.contact.email}</span>
+                  </a>
+                </div>
+
+                {/* Social */}
+                <div>
+                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light flex items-center gap-4">
+                    <div className="w-8 h-0.5 bg-vintage-gold"></div>
+                    Social
+                  </h3>
+                  <a 
+                    href={siteData.social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-2xl text-warm-brown hover:text-vintage-gold transition-colors duration-300 flex items-center gap-3 group"
+                  >
+                    <Instagram size={24} strokeWidth={1.5} className="group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-light">Instagram</span>
+                  </a>
+                </div>
+
+                {/* What to expect */}
+                <div className="bg-antique-white p-8 border-l-2 border-vintage-gold">
+                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-4 font-light">
+                    Open To
+                  </h3>
+                  <ul className="space-y-3 text-sepia-dark/80 font-light">
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-vintage-gold mt-2 flex-shrink-0"></div>
+                      Performance bookings and live collaborations
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-vintage-gold mt-2 flex-shrink-0"></div>
+                      Film, theatre, and recording projects
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-vintage-gold mt-2 flex-shrink-0"></div>
+                      Creative collaborations with fellow artists
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-vintage-gold mt-2 flex-shrink-0"></div>
+                      Media inquiries and interviews
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-vintage-gold mt-2 flex-shrink-0"></div>
+                      Teaching and mentorship opportunities
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Quote */}
+                <div className="pt-8 border-t border-vintage-gold/30">
+                  <p className="text-lg text-sepia-dark/70 italic leading-relaxed font-light">
+                    "The most meaningful work comes from genuine connection. I look forward to the possibility of creating something beautiful together."
                   </p>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm tracking-wider uppercase text-charcoal/60 mb-2">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-6 py-4 border border-charcoal/20 focus:border-gold focus:outline-none text-charcoal bg-white transition-colors duration-300"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-sm tracking-wider uppercase text-charcoal/60 mb-2">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-6 py-4 border border-charcoal/20 focus:border-gold focus:outline-none text-charcoal bg-white transition-colors duration-300"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="message" className="block text-sm tracking-wider uppercase text-charcoal/60 mb-2">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows="6"
-                      className="w-full px-6 py-4 border border-charcoal/20 focus:border-gold focus:outline-none text-charcoal bg-white transition-colors duration-300 resize-none"
-                    ></textarea>
-                  </div>
-                  
-                  <button
-                    type="submit"
-                    className="w-full md:w-auto px-8 py-4 bg-gold text-ivory hover:bg-gold/90 transition-all duration-300 text-sm tracking-wider uppercase"
-                  >
-                    Send Message
-                  </button>
-                </form>
-              )}
+              </div>
             </div>
 
-            {/* Contact Information */}
+            {/* Contact Form */}
             <div className={`transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-              <div className="sticky top-32">
-                <h2 className="text-2xl font-display text-charcoal mb-8">Get in Touch</h2>
+              <div className="bg-vintage-paper p-8 lg:p-10 border border-vintage-gold/20">
+                <h2 className="text-2xl font-display text-warm-brown mb-8">Send a Message</h2>
                 
-                <div className="space-y-8">
-                  {/* Email */}
-                  <div className="pb-8 border-b border-charcoal/10">
-                    <h3 className="text-xs tracking-widest uppercase text-charcoal/60 mb-4">Email</h3>
-                    <a 
-                      href={`mailto:${siteData.contact.email}`}
-                      className="text-lg text-charcoal hover:text-gold transition-colors duration-300 flex items-center gap-3"
+                {submitted ? (
+                  <div className="bg-antique-white border-l-2 border-vintage-gold p-8 text-center">
+                    <p className="text-sepia-dark text-lg font-light">
+                      Thank you for reaching out. I'll respond thoughtfully soon.
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                      <label htmlFor="name" className="block text-xs tracking-[0.2em] uppercase text-sepia-dark/60 mb-3 font-light">
+                        Your Name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 bg-vintage-cream border border-warm-brown/20 focus:border-vintage-gold focus:outline-none text-sepia-dark transition-colors duration-300 font-light"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="email" className="block text-xs tracking-[0.2em] uppercase text-sepia-dark/60 mb-3 font-light">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 bg-vintage-cream border border-warm-brown/20 focus:border-vintage-gold focus:outline-none text-sepia-dark transition-colors duration-300 font-light"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="message" className="block text-xs tracking-[0.2em] uppercase text-sepia-dark/60 mb-3 font-light">
+                        Your Message
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                        rows="6"
+                        className="w-full px-4 py-3 bg-vintage-cream border border-warm-brown/20 focus:border-vintage-gold focus:outline-none text-sepia-dark transition-colors duration-300 resize-none font-light"
+                      ></textarea>
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      className="w-full px-8 py-4 bg-warm-brown text-vintage-cream hover:bg-burnt-sienna transition-all duration-300 text-xs tracking-[0.3em] uppercase font-light shadow-sm hover:shadow-md"
                     >
-                      <Mail size={20} />
-                      {siteData.contact.email}
-                    </a>
-                  </div>
-
-                  {/* Social Media */}
-                  <div className="pb-8 border-b border-charcoal/10">
-                    <h3 className="text-xs tracking-widest uppercase text-charcoal/60 mb-4">Social Media</h3>
-                    <a 
-                      href={siteData.social.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-lg text-charcoal hover:text-gold transition-colors duration-300 flex items-center gap-3"
-                    >
-                      <Instagram size={20} />
-                      Instagram
-                    </a>
-                  </div>
-
-                  {/* Inquiries */}
-                  <div>
-                    <h3 className="text-xs tracking-widest uppercase text-charcoal/60 mb-4">Inquiries Welcome For</h3>
-                    <ul className="space-y-3 text-charcoal/70">
-                      <li>• Performance bookings</li>
-                      <li>• Collaboration opportunities</li>
-                      <li>• Media & press inquiries</li>
-                      <li>• Acting auditions</li>
-                      <li>• Recording projects</li>
-                    </ul>
-                  </div>
-
-                  {/* Quote */}
-                  <div className="pt-8 mt-8 border-t border-charcoal/10">
-                    <blockquote className="text-lg text-charcoal/70 italic leading-relaxed">
-                      "Looking forward to connecting with fellow artists, creative minds, and kind souls."
-                    </blockquote>
-                  </div>
-                </div>
+                      Send Message
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
           </div>

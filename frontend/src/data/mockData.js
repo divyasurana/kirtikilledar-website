@@ -68,32 +68,50 @@ Kirti believes in art as a form of quiet rebellion—a way to ask questions, to 
     {
       id: 1,
       image: "https://images.unsplash.com/photo-1580489944761-15a19d654956",
-      caption: "Portrait Session, 2024"
+      caption: "Portrait Session, 2024",
+      category: "portraits"
     },
     {
       id: 2,
       image: "https://images.unsplash.com/photo-1634595477722-7bc68dd410fd",
-      caption: "Contemplation"
+      caption: "Contemplation",
+      category: "moments"
     },
     {
       id: 3,
       image: "https://images.unsplash.com/photo-1636153279424-cb5d1e00f5a2",
-      caption: "Studio Portrait"
+      caption: "Studio Portrait",
+      category: "portraits"
     },
     {
       id: 4,
       image: "https://images.unsplash.com/photo-1526510747491-58f928ec870f",
-      caption: "Natural Light"
+      caption: "Natural Light",
+      category: "moments"
     },
     {
       id: 5,
       image: "https://images.unsplash.com/photo-1506863530036-1efeddceb993",
-      caption: "Editorial, 2023"
+      caption: "Editorial, 2023",
+      category: "portraits"
     },
     {
       id: 6,
       image: "https://images.unsplash.com/photo-1768935434380-48dd45098730",
-      caption: "On Stage"
+      caption: "On Stage",
+      category: "work"
+    },
+    {
+      id: 7,
+      image: "https://images.unsplash.com/photo-1677947226901-5164b32d5cfe",
+      caption: "Recording Session",
+      category: "behind"
+    },
+    {
+      id: 8,
+      image: "https://images.unsplash.com/photo-1597169428801-7c1adf2623bd",
+      caption: "Performance",
+      category: "work"
     }
   ],
   
