@@ -70,7 +70,7 @@ async def initialize_admin(username: str = "admin", password: str = "Kirti2024!"
 
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...), user: dict = Depends(verify_token)):
-    upload_dir = Path("/app/frontend/public/uploads")
+    upload_dir = Path("/app/backend/uploads")
     upload_dir.mkdir(parents=True, exist_ok=True)
     
     file_extension = Path(file.filename).suffix

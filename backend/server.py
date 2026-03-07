@@ -23,8 +23,8 @@ db = client[os.environ['DB_NAME']]
 # Create the main app without a prefix
 app = FastAPI()
 
-# Create uploads directory if it doesn't exist
-UPLOAD_DIR = Path("/app/frontend/public/uploads")
+# Create uploads directory if it doesn't exist (in backend, not frontend)
+UPLOAD_DIR = Path("/app/backend/uploads")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 # Mount static files for uploads
