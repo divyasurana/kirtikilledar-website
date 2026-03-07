@@ -191,11 +191,24 @@ const AdminProjects = () => {
               <div>
                 <label className="block text-sm mb-2">Project Image</label>
                 {formData.image && <img src={formData.image} alt="Preview" className="w-32 h-32 object-cover mb-2" />}
-                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30">
-                  <Upload size={16} />
-                  <span className="text-sm">Upload Image</span>
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                </label>
+                
+                <div className="space-y-3">
+                  <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30">
+                    <Upload size={16} />
+                    <span className="text-sm">Upload Image</span>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                  </label>
+                  
+                  <div className="text-sm text-sepia-dark/60">OR</div>
+                  
+                  <input
+                    type="text"
+                    value={formData.image || ''}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    placeholder="Paste image URL"
+                    className="w-full px-4 py-2 border border-warm-brown/20 text-sm"
+                  />
+                </div>
               </div>
 
               {formData.media_type && (

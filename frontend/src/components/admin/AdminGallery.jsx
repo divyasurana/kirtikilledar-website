@@ -103,11 +103,25 @@ const AdminGallery = () => {
                 {formData.image_url && (
                   <img src={formData.image_url} alt="Preview" className="w-full h-64 object-cover mb-2" />
                 )}
-                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30">
-                  <Upload size={16} />
-                  <span className="text-sm">{uploading ? 'Uploading...' : 'Upload Image'}</span>
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                </label>
+                
+                <div className="space-y-3">
+                  <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30">
+                    <Upload size={16} />
+                    <span className="text-sm">{uploading ? 'Uploading...' : 'Upload Image'}</span>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                  </label>
+                  
+                  <div className="text-sm text-sepia-dark/60">OR</div>
+                  
+                  <input
+                    type="text"
+                    value={formData.image_url || ''}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    placeholder="Paste image URL"
+                    required
+                    className="w-full px-4 py-2 border border-warm-brown/20 text-sm"
+                  />
+                </div>
               </div>
 
               <div>

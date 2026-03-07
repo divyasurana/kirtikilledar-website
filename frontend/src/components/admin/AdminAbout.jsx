@@ -90,11 +90,24 @@ const AdminAbout = () => {
         <div>
           <label className="block text-sm tracking-wider uppercase text-sepia-dark mb-2">Portrait Image</label>
           {content.portrait_image && <img src={content.portrait_image} alt="Portrait" className="w-48 h-64 object-cover mb-4" />}
-          <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30">
-            <Upload size={16} />
-            <span className="text-sm">Upload Image</span>
-            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          </label>
+          
+          <div className="space-y-3">
+            <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30">
+              <Upload size={16} />
+              <span className="text-sm">Upload Image</span>
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+            </label>
+            
+            <div className="text-sm text-sepia-dark/60">OR</div>
+            
+            <input
+              type="text"
+              value={content.portrait_image || ''}
+              onChange={(e) => setContent({ ...content, portrait_image: e.target.value })}
+              placeholder="Paste image URL"
+              className="w-full px-4 py-2 border border-warm-brown/20 text-sm"
+            />
+          </div>
         </div>
 
         <div>
