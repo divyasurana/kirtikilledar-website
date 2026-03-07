@@ -13,7 +13,14 @@ module.exports = {
                 sm: 'calc(var(--radius) - 4px)'
             },
             colors: {
-                // Custom Charulata-era palette
+                // Charulata-era vintage palette - warm, nostalgic, Bengali cinema
+                'vintage-cream': '#f5f1e8',
+                'vintage-paper': '#e8dcc4',
+                'warm-brown': '#3d2817',
+                'sepia-dark': '#4a3728',
+                'vintage-gold': '#b8935e',
+                'burnt-sienna': '#8b4513',
+                'antique-white': '#faebd7',
                 'ivory': '#faf9f6',
                 'charcoal': '#2a2a2a',
                 'gold': '#c9a961',
