@@ -96,11 +96,24 @@ const AdminHome = () => {
               className="w-48 h-64 object-cover mb-4 grayscale-[20%] sepia-[10%]"
             />
           )}
-          <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30 hover:bg-vintage-paper transition-colors duration-200">
-            <Upload size={16} />
-            <span className="text-sm font-light">{uploading ? 'Uploading...' : 'Upload Image'}</span>
-            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          </label>
+          
+          <div className="space-y-3">
+            <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-warm-brown/30 hover:bg-vintage-paper transition-colors duration-200">
+              <Upload size={16} />
+              <span className="text-sm font-light">{uploading ? 'Uploading...' : 'Upload Image'}</span>
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+            </label>
+            
+            <div className="text-sm text-sepia-dark/60 font-light">OR</div>
+            
+            <input
+              type="text"
+              value={content.hero_image || ''}
+              onChange={(e) => setContent({ ...content, hero_image: e.target.value })}
+              placeholder="Paste image URL here (e.g., https://images.unsplash.com/...)"
+              className="w-full px-4 py-2 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none font-light text-sm"
+            />
+          </div>
         </div>
 
         <div>
