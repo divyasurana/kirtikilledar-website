@@ -1,13 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { siteData } from '../data/mockData';
+import axios from 'axios';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const About = () => {
+  useDocumentTitle('About');
   const [isVisible, setIsVisible] = useState(false);
+  const [content, setContent] = useState({
+    image: 'https://images.unsplash.com/photo-1634595477722-7bc68dd410fd',
+    skills: [
+      "Hindustani Classical Vocal",
+      "Light Classical & Semi-Classical",
+      "Playback Singing",
+      "Theatre & Screen Acting",
+      "Voice Modulation & Dubbing"
+    ]
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
     window.scrollTo(0, 0);
+    fetchContent();
   }, []);
+
+  const fetchContent = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/content/about`);
+      if (response.data && Object.keys(response.data).length > 0) {
+        setContent(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching about content:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-vintage-cream">
@@ -147,7 +176,7 @@ const About = () => {
               <div className="bg-antique-white p-8 border border-vintage-gold/20">
                 <h3 className="text-xs tracking-[0.3em] uppercase text-vintage-gold mb-6 font-light">Areas of Practice</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {siteData.about.skills.map((skill, index) => (
+                  {content.skills && content.skills.map((skill, index) => (
                     <div 
                       key={index}
                       className="flex items-start gap-3"
@@ -175,7 +204,7 @@ const About = () => {
                   <div className="absolute -inset-3 border border-vintage-gold/30"></div>
                   
                   <img 
-                    src={siteData.about.image}
+                    src={content.image}
                     alt="Kirti Killedar"
                     className="w-full h-[500px] object-cover relative grayscale-[30%] sepia-[15%]"
                   />

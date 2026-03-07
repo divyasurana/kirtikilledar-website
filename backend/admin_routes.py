@@ -85,7 +85,7 @@ async def upload_file(file: UploadFile = File(...), user: dict = Depends(verify_
 @router.get("/home")
 async def get_home_content(user: dict = Depends(verify_token)):
     from server import db
-    content = await db.home_content.find_one()
+    content = await db.home_content.find_one({}, {"_id": 0})
     return content or {}
 
 @router.post("/home")
@@ -98,7 +98,7 @@ async def update_home_content(data: dict, user: dict = Depends(verify_token)):
 @router.get("/about")
 async def get_about_content(user: dict = Depends(verify_token)):
     from server import db
-    content = await db.about_content.find_one()
+    content = await db.about_content.find_one({}, {"_id": 0})
     return content or {}
 
 @router.post("/about")
@@ -111,7 +111,7 @@ async def update_about_content(data: dict, user: dict = Depends(verify_token)):
 @router.get("/projects")
 async def get_projects(user: dict = Depends(verify_token)):
     from server import db
-    projects = await db.projects.find().sort("created_at", -1).to_list(100)
+    projects = await db.projects.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return projects
 
 @router.post("/projects")
@@ -143,7 +143,7 @@ async def delete_project(project_id: str, user: dict = Depends(verify_token)):
 @router.get("/gallery")
 async def get_gallery(user: dict = Depends(verify_token)):
     from server import db
-    images = await db.gallery_images.find().sort("created_at", -1).to_list(200)
+    images = await db.gallery_images.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
     return images
 
 @router.post("/gallery")
@@ -165,7 +165,7 @@ async def delete_gallery_image(image_id: str, user: dict = Depends(verify_token)
 @router.get("/contact")
 async def get_contact_info(user: dict = Depends(verify_token)):
     from server import db
-    contact = await db.contact_info.find_one()
+    contact = await db.contact_info.find_one({}, {"_id": 0})
     return contact or {}
 
 @router.post("/contact")
@@ -178,7 +178,7 @@ async def update_contact_info(data: dict, user: dict = Depends(verify_token)):
 @router.get("/submissions")
 async def get_submissions(user: dict = Depends(verify_token)):
     from server import db
-    submissions = await db.contact_submissions.find().sort("created_at", -1).to_list(100)
+    submissions = await db.contact_submissions.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return submissions
 
 @router.put("/submissions/{submission_id}/read")
@@ -196,7 +196,7 @@ async def mark_read(submission_id: str, user: dict = Depends(verify_token)):
 @router.get("/events")
 async def get_events(user: dict = Depends(verify_token)):
     from server import db
-    events = await db.events.find().sort("event_date", 1).to_list(100)
+    events = await db.events.find({}, {"_id": 0}).sort("event_date", 1).to_list(100)
     return events
 
 @router.post("/events")

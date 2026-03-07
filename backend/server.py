@@ -72,10 +72,11 @@ async def get_status_checks():
 @api_router.get("/events")
 async def get_public_events():
     from datetime import datetime
-    # Get upcoming events only
-    events = await db.events.find({
-        "event_date": {"$gte": datetime.utcnow().isoformat()}
-    }).sort("event_date", 1).to_list(50)
+    # Get upcoming events only, exclude MongoDB _id
+    events = await db.events.find(
+        {"event_date": {"$gte": datetime.utcnow().isoformat()}},
+        {"_id": 0}
+    ).sort("event_date", 1).to_list(50)
     return events
 
 # Public Content Endpoints

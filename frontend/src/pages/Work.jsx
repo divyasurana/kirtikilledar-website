@@ -3,10 +3,12 @@ import { X, Music, Video } from 'lucide-react';
 import axios from 'axios';
 import AudioPlayer from '../components/AudioPlayer';
 import VideoPlayer from '../components/VideoPlayer';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Work = () => {
+  useDocumentTitle('Work');
   const [isVisible, setIsVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -72,8 +74,17 @@ const Work = () => {
       {/* Projects Grid */}
       <section className="py-20">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 max-w-6xl mx-auto">
-            {siteData.work.map((project, index) => (
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-sepia-dark/50">Loading projects...</p>
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-sepia-dark/50">No projects added yet. Use the admin panel to add your first project!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 max-w-6xl mx-auto">
+              {projects.map((project, index) => (
               <div
                 key={project.id}
                 className={`group cursor-pointer transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
@@ -128,7 +139,7 @@ const Work = () => {
                   </div>
                 </div>
               </div>
-              ))}
+                ))}
             </div>
           )}
         </div>

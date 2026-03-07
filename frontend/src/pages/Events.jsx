@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Calendar, MapPin, Clock, ExternalLink } from 'lucide-react';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Events = () => {
+  useDocumentTitle('Events');
   const [events, setEvents] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(true);

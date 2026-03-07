@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Mail, Instagram } from 'lucide-react';
-import { siteData } from '../data/mockData';
+import axios from 'axios';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Contact = () => {
+  useDocumentTitle('Contact');
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -10,20 +14,44 @@ const Contact = () => {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [contactInfo, setContactInfo] = useState({
+    email: 'contact@kirtikilledar.com',
+    instagram_url: 'https://www.instagram.com/kirti.killedar/'
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
     window.scrollTo(0, 0);
+    fetchContactInfo();
   }, []);
 
-  const handleSubmit = (e) => {
+  const fetchContactInfo = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/content/contact`);
+      if (response.data && Object.keys(response.data).length > 0) {
+        setContactInfo(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching contact info:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', message: '' });
-    }, 3000);
+    try {
+      await axios.post(`${BACKEND_URL}/api/contact/submit`, formData);
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ name: '', email: '', message: '' });
+      }, 3000);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('There was an error sending your message. Please try again.');
+    }
   };
 
   const handleChange = (e) => {
@@ -82,11 +110,11 @@ const Contact = () => {
                     Email
                   </h3>
                   <a 
-                    href={`mailto:${siteData.contact.email}`}
+                    href={`mailto:${contactInfo.email}`}
                     className="text-2xl text-warm-brown hover:text-vintage-gold transition-colors duration-300 flex items-center gap-3 group"
                   >
                     <Mail size={24} strokeWidth={1.5} className="group-hover:scale-110 transition-transform duration-300" />
-                    <span className="font-light">{siteData.contact.email}</span>
+                    <span className="font-light">{contactInfo.email}</span>
                   </a>
                 </div>
 
@@ -97,7 +125,7 @@ const Contact = () => {
                     Social
                   </h3>
                   <a 
-                    href={siteData.social.instagram}
+                    href={contactInfo.instagram_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-2xl text-warm-brown hover:text-vintage-gold transition-colors duration-300 flex items-center gap-3 group"

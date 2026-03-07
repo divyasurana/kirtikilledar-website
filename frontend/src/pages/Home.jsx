@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
+  useDocumentTitle('Home');
   const [isVisible, setIsVisible] = useState(false);
   const [content, setContent] = useState({
     hero_image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956',

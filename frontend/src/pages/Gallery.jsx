@@ -1,16 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { siteData } from '../data/mockData';
+import axios from 'axios';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Gallery = () => {
+  useDocumentTitle('Gallery');
   const [isVisible, setIsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [gallery, setGallery] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
     window.scrollTo(0, 0);
+    fetchGallery();
   }, []);
+
+  const fetchGallery = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/content/gallery`);
+      setGallery(response.data || []);
+    } catch (error) {
+      console.error('Error fetching gallery:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (selectedImage) {
@@ -32,8 +50,8 @@ const Gallery = () => {
   ];
 
   const filteredGallery = activeCategory === 'all' 
-    ? siteData.gallery 
-    : siteData.gallery.filter(item => item.category === activeCategory);
+    ? gallery 
+    : gallery.filter(item => item.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-vintage-cream">
@@ -88,8 +106,14 @@ const Gallery = () => {
       {/* Gallery Grid */}
       <section className="py-20">
         <div className="container mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
-            {filteredGallery.map((item, index) => (
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-sepia-dark/50">Loading gallery...</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
+                {filteredGallery.map((item, index) => (
               <div
                 key={item.id}
                 className={`group cursor-pointer transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
@@ -112,14 +136,16 @@ const Gallery = () => {
                 <p className="text-sm text-sepia-dark/60 group-hover:text-vintage-gold transition-colors duration-300 font-light text-center">
                   {item.caption}
                 </p>
-              </div>
-            ))}
-          </div>
-
-          {filteredGallery.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-sepia-dark/50 text-lg italic">No images in this category yet.</p>
+                </div>
+              ))}
             </div>
+
+            {filteredGallery.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-sepia-dark/50 text-lg italic">No images in this category yet.</p>
+              </div>
+            )}
+          </>
           )}
         </div>
       </section>

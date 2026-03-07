@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, Link, useLocation } from 'react-router-dom';
 import { LogOut, Home as HomeIcon, User, Briefcase, Image as ImageIcon, Mail, MessageSquare, Calendar } from 'lucide-react';
 import axios from 'axios';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminHome from '../components/admin/AdminHome';
 import AdminAbout from '../components/admin/AdminAbout';
@@ -14,6 +15,7 @@ import AdminEvents from '../components/admin/AdminEvents';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Admin = () => {
+  useDocumentTitle('Admin Panel');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
