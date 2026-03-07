@@ -1,17 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { X, Music, Video } from 'lucide-react';
-import { siteData } from '../data/mockData';
+import axios from 'axios';
 import AudioPlayer from '../components/AudioPlayer';
 import VideoPlayer from '../components/VideoPlayer';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Work = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
     window.scrollTo(0, 0);
+    fetchProjects();
   }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/content/projects`);
+      setProjects(response.data || []);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (selectedProject) {
@@ -112,8 +128,9 @@ const Work = () => {
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

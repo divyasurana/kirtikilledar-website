@@ -78,6 +78,46 @@ async def get_public_events():
     }).sort("event_date", 1).to_list(50)
     return events
 
+# Public Content Endpoints
+@api_router.get("/content/home")
+async def get_home_content():
+    content = await db.home_content.find_one({}, {"_id": 0})
+    return content or {}
+
+@api_router.get("/content/about")
+async def get_about_content():
+    content = await db.about_content.find_one({}, {"_id": 0})
+    return content or {}
+
+@api_router.get("/content/projects")
+async def get_projects():
+    projects = await db.projects.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return projects
+
+@api_router.get("/content/gallery")
+async def get_gallery():
+    images = await db.gallery_images.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return images
+
+@api_router.get("/content/contact")
+async def get_contact_info():
+    contact = await db.contact_info.find_one({}, {"_id": 0})
+    return contact or {"email": "contact@kirtikilledar.com", "instagram_url": "https://www.instagram.com/kirti.killedar/"}
+
+# Contact Form Submission
+@api_router.post("/contact/submit")
+async def submit_contact_form(name: str, email: str, message: str):
+    submission = {
+        "id": str(uuid.uuid4()),
+        "name": name,
+        "email": email,
+        "message": message,
+        "created_at": datetime.utcnow(),
+        "read": False
+    }
+    await db.contact_submissions.insert_one(submission)
+    return {"message": "Message sent successfully"}
+
 # Include the routers in the main app
 app.include_router(api_router)
 app.include_router(admin_router)
