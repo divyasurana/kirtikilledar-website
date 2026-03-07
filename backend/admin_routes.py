@@ -80,7 +80,9 @@ async def upload_file(file: UploadFile = File(...), user: dict = Depends(verify_
     with file_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    return {"url": f"/uploads/{unique_filename}"}
+    # Return absolute URL for production
+    backend_url = os.environ.get('BACKEND_URL', 'https://kirtikilledar.com')
+    return {"url": f"{backend_url}/uploads/{unique_filename}"}
 
 @router.get("/home")
 async def get_home_content(user: dict = Depends(verify_token)):
