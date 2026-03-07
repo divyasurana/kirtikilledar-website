@@ -24,12 +24,23 @@ const Home = () => {
   const fetchContent = async () => {
     try {
       const [homeRes, projectsRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/content/home`).catch(() => ({ data: {} })),
-        axios.get(`${BACKEND_URL}/api/content/projects`).catch(() => ({ data: [] }))
+        axios.get(`${BACKEND_URL}/api/content/home`).catch((err) => {
+          console.error('Home API Error:', err);
+          return { data: {} };
+        }),
+        axios.get(`${BACKEND_URL}/api/content/projects`).catch((err) => {
+          console.error('Projects API Error:', err);
+          return { data: [] };
+        })
       ]);
+
+      console.log('Home API Response:', homeRes.data);
 
       if (homeRes.data && Object.keys(homeRes.data).length > 0) {
         setContent(homeRes.data);
+        console.log('Content updated with:', homeRes.data);
+      } else {
+        console.warn('No home content received from API');
       }
       
       if (projectsRes.data && projectsRes.data.length > 0) {
@@ -88,6 +99,13 @@ const Home = () => {
                   src={content.hero_image}
                   alt="Kirti Killedar"
                   className="w-full h-[600px] lg:h-[700px] object-cover relative grayscale-[20%] contrast-[1.1] sepia-[10%]"
+                  onError={(e) => {
+                    console.error('Image failed to load:', content.hero_image);
+                    console.error('Image error event:', e);
+                  }}
+                  onLoad={() => {
+                    console.log('Image loaded successfully:', content.hero_image);
+                  }}
                 />
                 
                 <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-vintage-gold"></div>
