@@ -33,8 +33,14 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 @router.post("/login")
-async def login(username: str, password: str):
+async def login(credentials: dict):
     from server import db
+    
+    username = credentials.get("username")
+    password = credentials.get("password")
+    
+    if not username or not password:
+        raise HTTPException(status_code=400, detail="Username and password required")
     
     user = await db.admin_users.find_one({"username": username})
     
