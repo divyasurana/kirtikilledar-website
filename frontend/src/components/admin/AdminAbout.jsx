@@ -43,7 +43,10 @@ const AdminAbout = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/admin/upload`, formData);
+      const token = localStorage.getItem('admin_token');
+      const response = await axios.post(`${BACKEND_URL}/api/admin/upload`, formData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setContent({ ...content, portrait_image: response.data.url });
     } catch (error) {
       console.error('Error:', error);

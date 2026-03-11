@@ -21,7 +21,10 @@ const AdminHome = () => {
 
   const fetchContent = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/home`);
+      const token = localStorage.getItem('admin_token');
+      const response = await axios.get(`${BACKEND_URL}/api/admin/home`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (response.data && Object.keys(response.data).length > 1) {
         setContent(response.data);
       }
@@ -41,7 +44,10 @@ const AdminHome = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/admin/upload`, formData);
+      const token = localStorage.getItem('admin_token');
+      const response = await axios.post(`${BACKEND_URL}/api/admin/upload`, formData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setContent({ ...content, hero_image: response.data.url });
       setMessage('Image uploaded successfully!');
       setTimeout(() => setMessage(''), 3000);
@@ -56,7 +62,10 @@ const AdminHome = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await axios.post(`${BACKEND_URL}/api/admin/home`, content);
+      const token = localStorage.getItem('admin_token');
+      await axios.post(`${BACKEND_URL}/api/admin/home`, content, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setMessage('Home page content saved successfully!');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
