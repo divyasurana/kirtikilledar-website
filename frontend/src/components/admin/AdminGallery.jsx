@@ -21,7 +21,10 @@ const AdminGallery = () => {
 
   const fetchImages = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/gallery`);
+      const token = localStorage.getItem('adminToken');
+      const response = await axios.get(`${BACKEND_URL}/api/admin/gallery`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setImages(response.data);
     } catch (error) {
       console.error('Error:', error);

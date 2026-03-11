@@ -15,8 +15,9 @@ const AdminLogin = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/admin/login`, null, {
-        params: { username, password }
+      const response = await axios.post(`${BACKEND_URL}/api/admin/login`, {
+        username,
+        password
       });
       
       onLogin(response.data.access_token);

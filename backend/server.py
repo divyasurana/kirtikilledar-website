@@ -1,5 +1,6 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException, Query, Header
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -127,6 +128,35 @@ async def submit_contact_form(name: str, email: str, message: str):
     await db.contact_submissions.insert_one(submission)
     return {"message": "Message sent successfully"}
 
+# File download endpoint
+@api_router.get("/files/{file_id}")
+async def download_file(file_id: str):
+    from storage import get_object
+    
+    # Find file in database
+    file_record = await db.uploaded_files.find_one(
+        {"id": file_id, "is_deleted": False},
+        {"_id": 0}
+    )
+    
+    if not file_record:
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    try:
+        # Download from storage
+        data, content_type = get_object(file_record["storage_path"])
+        
+        # Return file with correct content type
+        return Response(
+            content=data,
+            media_type=file_record.get("content_type", content_type),
+            headers={
+                "Content-Disposition": f'inline; filename="{file_record["original_filename"]}"'
+            }
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"File retrieval failed: {str(e)}")
+
 # Include the routers in the main app
 app.include_router(api_router)
 app.include_router(admin_router)
@@ -145,6 +175,21 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+@app.on_event("startup")
+async def startup_db_client():
+    """Initialize database and storage on startup"""
+    global db
+    db = client[os.environ['DB_NAME']]
+    logging.info("Database connection established")
+    
+    # Initialize Emergent Object Storage
+    try:
+        from storage import init_storage
+        init_storage()
+        logging.info("✅ Emergent Object Storage initialized")
+    except Exception as e:
+        logging.error(f"❌ Storage initialization failed: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

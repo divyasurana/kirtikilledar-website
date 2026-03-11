@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 import jwt
 import bcrypt
@@ -76,19 +76,47 @@ async def initialize_admin(username: str = "admin", password: str = "Kirti2024!"
 
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...), user: dict = Depends(verify_token)):
-    upload_dir = Path("/app/backend/uploads")
-    upload_dir.mkdir(parents=True, exist_ok=True)
+    from storage import put_object, get_content_type
+    from server import db
     
-    file_extension = Path(file.filename).suffix
-    unique_filename = f"{uuid.uuid4()}{file_extension}"
-    file_path = upload_dir / unique_filename
+    # Read file data
+    file_data = await file.read()
     
-    with file_path.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    # Generate unique path
+    file_ext = Path(file.filename).suffix.lstrip('.') if '.' in file.filename else 'bin'
+    unique_id = str(uuid.uuid4())
+    storage_path = f"kirtikilledar/uploads/{unique_id}.{file_ext}"
     
-    # Return absolute URL for production
-    backend_url = os.environ.get('BACKEND_URL', 'https://kirtikilledar.com')
-    return {"url": f"{backend_url}/uploads/{unique_filename}"}
+    # Get content type
+    content_type = file.content_type or get_content_type(file.filename)
+    
+    try:
+        # Upload to Emergent Object Storage
+        result = put_object(storage_path, file_data, content_type)
+        
+        # Store metadata in MongoDB
+        file_record = {
+            "id": unique_id,
+            "storage_path": result["path"],
+            "original_filename": file.filename,
+            "content_type": content_type,
+            "size": result["size"],
+            "is_deleted": False,
+            "uploaded_by": user.get("id"),
+            "created_at": datetime.now(timezone.utc)
+        }
+        await db.uploaded_files.insert_one(file_record)
+        
+        # Return URL that frontend can use
+        backend_url = os.environ.get('BACKEND_URL', 'http://localhost:8001')
+        return {
+            "url": f"{backend_url}/api/files/{unique_id}",
+            "id": unique_id,
+            "filename": file.filename,
+            "size": result["size"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @router.get("/home")
 async def get_home_content(user: dict = Depends(verify_token)):

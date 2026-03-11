@@ -30,7 +30,10 @@ const AdminProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/projects`);
+      const token = localStorage.getItem('adminToken');
+      const response = await axios.get(`${BACKEND_URL}/api/admin/projects`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setProjects(response.data);
     } catch (error) {
       console.error('Error:', error);
