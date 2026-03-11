@@ -9,7 +9,7 @@ const Home = () => {
   useDocumentTitle('Home');
   const [isVisible, setIsVisible] = useState(false);
   const [content, setContent] = useState({
-    hero_image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956',
+    hero_image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1200&q=80',
     tagline: 'A quiet observer of people, stories, and moments.',
     intro_text: 'Through music and performance, I seek to explore the depth of human emotion.'
   });
@@ -36,11 +36,12 @@ const Home = () => {
 
       console.log('Home API Response:', homeRes.data);
 
-      if (homeRes.data && Object.keys(homeRes.data).length > 0) {
+      // Only update if we have valid data with a working hero_image
+      if (homeRes.data && Object.keys(homeRes.data).length > 0 && homeRes.data.hero_image && homeRes.data.hero_image !== 'https://test-image-url.com/hero.jpg') {
         setContent(homeRes.data);
         console.log('Content updated with:', homeRes.data);
       } else {
-        console.warn('No home content received from API');
+        console.warn('Using default content - API returned empty or invalid data');
       }
       
       if (projectsRes.data && projectsRes.data.length > 0) {
