@@ -269,24 +269,31 @@ const AdminProjects = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {projects.map((project) => (
-          <div key={project.id} className="bg-white border border-vintage-gold/20 p-4">
-            {project.image && <img src={project.image} alt={project.title} className="w-full h-48 object-cover mb-4" />}
-            <h3 className="text-xl font-display text-warm-brown mb-2">{project.title}</h3>
-            <p className="text-sm text-sepia-dark/70 mb-4">{project.description}</p>
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-vintage-gold">{project.type} • {project.year}</span>
-              <div className="flex gap-2">
-                <button onClick={() => handleEdit(project)} className="p-2 hover:bg-vintage-paper">
-                  <Edit2 size={16} />
-                </button>
-                <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-burnt-sienna/10 text-burnt-sienna">
-                  <Trash2 size={16} />
-                </button>
+        {projects.length === 0 ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-sepia-dark/60 text-lg mb-4">No projects yet</p>
+            <p className="text-sepia-dark/40 text-sm">Click "Add Project" to create your first project</p>
+          </div>
+        ) : (
+          projects.map((project) => (
+            <div key={project.id} className="bg-white border border-vintage-gold/20 p-4">
+              {project.image && <img src={project.image} alt={project.title} className="w-full h-48 object-cover mb-4" />}
+              <h3 className="text-xl font-display text-warm-brown mb-2">{project.title}</h3>
+              <p className="text-sm text-sepia-dark/70 mb-4">{project.description}</p>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-vintage-gold">{project.type} • {project.year}</span>
+                <div className="flex gap-2">
+                  <button onClick={() => handleEdit(project)} className="p-2 hover:bg-vintage-paper">
+                    <Edit2 size={16} />
+                  </button>
+                  <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-burnt-sienna/10 text-burnt-sienna">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

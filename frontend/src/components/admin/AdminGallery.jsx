@@ -166,23 +166,30 @@ const AdminGallery = () => {
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {images.map((image) => (
-          <div key={image.id} className="relative group">
-            <img src={image.image_url} alt={image.caption} className="w-full h-64 object-cover" />
-            <div className="absolute inset-0 bg-warm-brown/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <button
-                onClick={() => handleDelete(image.id)}
-                className="p-3 bg-burnt-sienna text-vintage-cream rounded-full"
-              >
-                <Trash2 size={20} />
-              </button>
-            </div>
-            <div className="p-2 bg-vintage-paper">
-              <p className="text-xs text-sepia-dark truncate">{image.caption}</p>
-              <p className="text-xs text-vintage-gold">{image.category}</p>
-            </div>
+        {images.length === 0 ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-sepia-dark/60 text-lg mb-4">No images in gallery yet</p>
+            <p className="text-sepia-dark/40 text-sm">Click "Add Image" to upload your first image</p>
           </div>
-        ))}
+        ) : (
+          images.map((image) => (
+            <div key={image.id} className="relative group">
+              <img src={image.image_url} alt={image.caption} className="w-full h-64 object-cover" />
+              <div className="absolute inset-0 bg-warm-brown/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button
+                  onClick={() => handleDelete(image.id)}
+                  className="p-3 bg-burnt-sienna text-vintage-cream rounded-full"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </div>
+              <div className="p-2 bg-vintage-paper">
+                <p className="text-xs text-sepia-dark truncate">{image.caption}</p>
+                <p className="text-xs text-vintage-gold">{image.category}</p>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
