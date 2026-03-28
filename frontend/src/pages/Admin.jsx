@@ -64,8 +64,6 @@ const Admin = () => {
     { path: '/admin/submissions', icon: MessageSquare, label: 'Messages' }
   ];
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-vintage-cream flex flex-col md:flex-row">
       {/* Mobile Header */}
