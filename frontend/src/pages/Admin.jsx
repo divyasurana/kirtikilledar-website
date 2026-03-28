@@ -106,7 +106,7 @@ const Admin = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pt-20">
         <Routes>
           <Route path="/" element={<Navigate to="/admin/home" />} />
           <Route path="/login" element={<Navigate to="/admin/home" />} />
