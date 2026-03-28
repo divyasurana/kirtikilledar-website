@@ -26,7 +26,10 @@ const AdminEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/events`);
+      const token = localStorage.getItem('admin_token');
+      const response = await axios.get(`${BACKEND_URL}/api/admin/events`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setEvents(response.data);
     } catch (error) {
       console.error('Error:', error);
@@ -38,10 +41,15 @@ const AdminEvents = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('admin_token');
       if (editingEvent) {
-        await axios.put(`${BACKEND_URL}/api/admin/events/${editingEvent.id}`, formData);
+        await axios.put(`${BACKEND_URL}/api/admin/events/${editingEvent.id}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       } else {
-        await axios.post(`${BACKEND_URL}/api/admin/events`, formData);
+        await axios.post(`${BACKEND_URL}/api/admin/events`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       }
       fetchEvents();
       resetForm();
@@ -59,7 +67,10 @@ const AdminEvents = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this event?')) return;
     try {
-      await axios.delete(`${BACKEND_URL}/api/admin/events/${id}`);
+      const token = localStorage.getItem('admin_token');
+      await axios.delete(`${BACKEND_URL}/api/admin/events/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       fetchEvents();
     } catch (error) {
       console.error('Error:', error);

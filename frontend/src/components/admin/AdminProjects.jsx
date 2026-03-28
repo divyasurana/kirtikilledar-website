@@ -30,7 +30,7 @@ const AdminProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('admin_token');
       const response = await axios.get(`${BACKEND_URL}/api/admin/projects`, {
         headers: { Authorization: `Bearer ${token}` }
       });
