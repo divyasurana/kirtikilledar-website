@@ -93,17 +93,25 @@ const About = () => {
               </div>
               
               <div className="space-y-6">
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  I grew up in a household where music was not just entertainment, but a way of understanding the world. My earliest memories are of listening to my grandmother sing—her voice carrying stories of longing, joy, and the passage of time. I didn't know then that I was being taught the language of emotion.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  Classical music became my foundation. The discipline of learning ragas taught me patience, precision, and the art of restraint. But it was the spaces between the notes—the silences—that fascinated me most. That's where meaning lives. That's where truth hides.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  As I grew older, I found myself drawn to storytelling in all its forms: theatre, film, literature. I realized that whether I was singing or acting, I was doing the same thing—trying to understand and express the complexity of being human. My artistic instinct has always been to look beneath the surface, to find what is unspoken, to give voice to what often remains silent.
-                </p>
+                {content.background_text ? (
+                  content.background_text.split('\n\n').map((para, i) => (
+                    <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed">{para}</p>
+                  ))
+                ) : (
+                  <>
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      I grew up in a household where music was not just entertainment, but a way of understanding the world. My earliest memories are of listening to my grandmother sing—her voice carrying stories of longing, joy, and the passage of time. I didn't know then that I was being taught the language of emotion.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      Classical music became my foundation. The discipline of learning ragas taught me patience, precision, and the art of restraint. But it was the spaces between the notes—the silences—that fascinated me most. That's where meaning lives. That's where truth hides.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      As I grew older, I found myself drawn to storytelling in all its forms: theatre, film, literature. I realized that whether I was singing or acting, I was doing the same thing—trying to understand and express the complexity of being human. My artistic instinct has always been to look beneath the surface, to find what is unspoken, to give voice to what often remains silent.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
 
@@ -155,25 +163,35 @@ const About = () => {
               </div>
               
               <div className="space-y-6 mb-12">
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  I draw inspiration from many sources, each teaching me different ways to see and understand the world.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  <strong className="text-warm-brown">Cinema</strong> has been a profound teacher—particularly the work of Satyajit Ray, whose films understand that the most powerful moments are often the quietest. The way Madhabi Mukherjee conveyed an entire interior world through a glance in <em>Charulata</em> changed how I think about performance.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  <strong className="text-warm-brown">Literature</strong> taught me the rhythm of language and the power of interiority. I return often to the poetry of Rumi, the short stories of Chekhov, and the novels of Jhumpa Lahiri—writers who understand loneliness, longing, and the distance between what we feel and what we can express.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  <strong className="text-warm-brown">Theatre</strong> gave me the courage to be vulnerable in front of others. There is nowhere to hide on stage. You must be present. You must be truthful. This discipline carries into everything I do.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  But perhaps my greatest influence is <strong className="text-warm-brown">everyday human behavior</strong>—the small dramas that unfold in cafes, on trains, in waiting rooms. The way a stranger's face changes when they receive unexpected news. The body language of a couple sitting in silence. These are the moments that remind me why I make art: to honor the complexity and beauty of ordinary life.
-                </p>
+                {content.influences_text ? (
+                  content.influences_text.split('\n\n').map((para, i) => (
+                    <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed" dangerouslySetInnerHTML={{
+                      __html: para.replace(/\*\*(.*?)\*\*/g, '<strong class="text-warm-brown">$1</strong>').replace(/_(.*?)_/g, '<em>$1</em>')
+                    }} />
+                  ))
+                ) : (
+                  <>
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      I draw inspiration from many sources, each teaching me different ways to see and understand the world.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      <strong className="text-warm-brown">Cinema</strong> has been a profound teacher—particularly the work of Satyajit Ray, whose films understand that the most powerful moments are often the quietest. The way Madhabi Mukherjee conveyed an entire interior world through a glance in <em>Charulata</em> changed how I think about performance.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      <strong className="text-warm-brown">Literature</strong> taught me the rhythm of language and the power of interiority. I return often to the poetry of Rumi, the short stories of Chekhov, and the novels of Jhumpa Lahiri—writers who understand loneliness, longing, and the distance between what we feel and what we can express.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      <strong className="text-warm-brown">Theatre</strong> gave me the courage to be vulnerable in front of others. There is nowhere to hide on stage. You must be present. You must be truthful. This discipline carries into everything I do.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      But perhaps my greatest influence is <strong className="text-warm-brown">everyday human behavior</strong>—the small dramas that unfold in cafes, on trains, in waiting rooms. The way a stranger's face changes when they receive unexpected news. The body language of a couple sitting in silence. These are the moments that remind me why I make art: to honor the complexity and beauty of ordinary life.
+                    </p>
+                  </>
+                )}
               </div>
 
               {/* Skills/Practices */}
