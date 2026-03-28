@@ -16,10 +16,11 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Admin = () => {
   useDocumentTitle('Admin Panel');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
