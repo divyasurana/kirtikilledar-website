@@ -216,9 +216,19 @@ const Work = () => {
                     <div className="w-8 h-0.5 bg-vintage-gold"></div>
                     Project Summary
                   </h3>
-                  <p className="text-lg text-sepia-dark/80 leading-relaxed font-light">
-                    {selectedProject.description} This project represented an important exploration of {selectedProject.category === 'singing' ? 'musical expression and vocal technique' : 'character depth and emotional authenticity'}, allowing me to delve into {selectedProject.category === 'singing' ? 'the nuances of melody and rhythm' : 'the psychology of the character and their inner world'}.
-                  </p>
+                  <div className="space-y-4">
+                    {selectedProject.summary ? (
+                      selectedProject.summary.split('\n\n').map((para, i) => (
+                        <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed font-light">
+                          {para}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="text-lg text-sepia-dark/80 leading-relaxed font-light">
+                        {selectedProject.description} This project represented an important exploration of {selectedProject.category === 'singing' ? 'musical expression and vocal technique' : 'character depth and emotional authenticity'}, allowing me to delve into {selectedProject.category === 'singing' ? 'the nuances of melody and rhythm' : 'the psychology of the character and their inner world'}.
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Creative Process */}
@@ -227,12 +237,22 @@ const Work = () => {
                     Creative Process
                   </h3>
                   <div className="space-y-4">
-                    <p className="text-sepia-dark/80 leading-relaxed font-light">
-                      The preparation for this project began with extensive research and observation. I spent weeks {selectedProject.category === 'singing' ? 'studying the raga, understanding its emotional landscape, and finding my own voice within its classical framework' : 'building the character from the inside out—observing real people, understanding their motivations, and finding the truth in their contradictions'}.
-                    </p>
-                    <p className="text-sepia-dark/80 leading-relaxed font-light">
-                      What moved me most about this work was discovering the moments of vulnerability—the places where technique gives way to pure emotion, where the performance becomes something more than performance.
-                    </p>
+                    {selectedProject.creative_process ? (
+                      selectedProject.creative_process.split('\n\n').map((para, i) => (
+                        <p key={i} className="text-sepia-dark/80 leading-relaxed font-light">
+                          {para}
+                        </p>
+                      ))
+                    ) : (
+                      <>
+                        <p className="text-sepia-dark/80 leading-relaxed font-light">
+                          The preparation for this project began with extensive research and observation. I spent weeks {selectedProject.category === 'singing' ? 'studying the raga, understanding its emotional landscape, and finding my own voice within its classical framework' : 'building the character from the inside out—observing real people, understanding their motivations, and finding the truth in their contradictions'}.
+                        </p>
+                        <p className="text-sepia-dark/80 leading-relaxed font-light">
+                          What moved me most about this work was discovering the moments of vulnerability—the places where technique gives way to pure emotion, where the performance becomes something more than performance.
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -241,12 +261,22 @@ const Work = () => {
                   <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-4 font-light">
                     Behind the Scenes
                   </h3>
-                  <p className="text-sepia-dark/70 italic leading-relaxed font-light">
-                    {selectedProject.category === 'singing' 
-                      ? '"The most challenging moment was finding the courage to let go of perfection and trust the silence between notes. That\'s where the music truly lives."'
-                      : '"The breakthrough came when I stopped trying to play the character and simply allowed myself to become her—to see the world through her eyes, to carry her burdens, to breathe her breath."'
-                    }
-                  </p>
+                  {selectedProject.behind_scenes ? (
+                    <div className="space-y-4">
+                      {selectedProject.behind_scenes.split('\n\n').map((para, i) => (
+                        <p key={i} className="text-sepia-dark/70 italic leading-relaxed font-light">
+                          {para}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sepia-dark/70 italic leading-relaxed font-light">
+                      {selectedProject.category === 'singing' 
+                        ? '"The most challenging moment was finding the courage to let go of perfection and trust the silence between notes. That\'s where the music truly lives."'
+                        : '"The breakthrough came when I stopped trying to play the character and simply allowed myself to become her—to see the world through her eyes, to carry her burdens, to breathe her breath."'
+                      }
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
