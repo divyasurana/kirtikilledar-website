@@ -81,7 +81,7 @@ class TestAdminAuthentication:
         """Test successful admin login"""
         response = requests.post(
             f"{BASE_URL}/api/admin/login",
-            params={"username": "admin", "password": "Kirti2024!"}
+            json={"username": "admin", "password": "Kirti2024!"}
         )
         assert response.status_code == 200
         data = response.json()
@@ -94,7 +94,7 @@ class TestAdminAuthentication:
         """Test login with invalid username"""
         response = requests.post(
             f"{BASE_URL}/api/admin/login",
-            params={"username": "wrong", "password": "Kirti2024!"}
+            json={"username": "wrong", "password": "Kirti2024!"}
         )
         assert response.status_code == 401
         print("✓ Invalid username rejected correctly")
@@ -103,7 +103,7 @@ class TestAdminAuthentication:
         """Test login with invalid password"""
         response = requests.post(
             f"{BASE_URL}/api/admin/login",
-            params={"username": "admin", "password": "wrongpass"}
+            json={"username": "admin", "password": "wrongpass"}
         )
         assert response.status_code == 401
         print("✓ Invalid password rejected correctly")
@@ -114,7 +114,7 @@ def auth_token():
     """Get authentication token for tests"""
     response = requests.post(
         f"{BASE_URL}/api/admin/login",
-        params={"username": "admin", "password": "Kirti2024!"}
+        json={"username": "admin", "password": "Kirti2024!"}
     )
     if response.status_code == 200:
         return response.json()["access_token"]

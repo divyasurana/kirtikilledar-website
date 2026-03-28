@@ -130,21 +130,31 @@ const About = () => {
               </div>
               
               <div className="space-y-6">
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  My working philosophy is simple: <em>listen deeply, observe quietly, and trust what you find.</em>
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  Before I step into a character or interpret a piece of music, I spend time in silence. I watch people. I listen to the rhythms of their speech, the hesitations, the moments when words fail them. I notice the way hands move when someone is nervous, the way eyes shift when someone is hiding something, the micro-expressions that reveal what the mouth won't say.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  I believe that truth lives in small moments—a held breath, a pause before speaking, the way someone looks away. These are the details that make a performance feel real. These are the details that connect us to each other.
-                </p>
-                
-                <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                  I don't perform to impress. I perform to communicate something true. If even one person in the audience feels seen, feels understood, feels less alone—then I have done my job.
-                </p>
+                {content.approach_text ? (
+                  content.approach_text.split('\n\n').map((para, i) => (
+                    <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed" dangerouslySetInnerHTML={{
+                      __html: para.replace(/\*\*(.*?)\*\*/g, '<strong class="text-warm-brown">$1</strong>').replace(/_(.*?)_/g, '<em>$1</em>')
+                    }} />
+                  ))
+                ) : (
+                  <>
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      My working philosophy is simple: <em>listen deeply, observe quietly, and trust what you find.</em>
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      Before I step into a character or interpret a piece of music, I spend time in silence. I watch people. I listen to the rhythms of their speech, the hesitations, the moments when words fail them. I notice the way hands move when someone is nervous, the way eyes shift when someone is hiding something, the micro-expressions that reveal what the mouth won't say.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      I believe that truth lives in small moments—a held breath, a pause before speaking, the way someone looks away. These are the details that make a performance feel real. These are the details that connect us to each other.
+                    </p>
+                    
+                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
+                      I don't perform to impress. I perform to communicate something true. If even one person in the audience feels seen, feels understood, feels less alone—then I have done my job.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
 
