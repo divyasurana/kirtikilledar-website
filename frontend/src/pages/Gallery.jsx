@@ -124,7 +124,7 @@ const Gallery = () => {
                   <div className="absolute inset-0 border border-warm-brown/10 z-10 pointer-events-none group-hover:border-vintage-gold/40 transition-colors duration-300"></div>
                   
                   <img 
-                    src={item.image}
+                    src={item.image_url}
                     alt={item.caption}
                     className="w-full h-[380px] object-cover grayscale-[35%] sepia-[18%] transition-all duration-700 group-hover:grayscale-[15%] group-hover:scale-105"
                   />
@@ -170,7 +170,7 @@ const Gallery = () => {
               <div className="absolute -inset-2 border border-vintage-gold/30 pointer-events-none"></div>
               
               <img 
-                src={selectedImage.image}
+                src={selectedImage.image_url}
                 alt={selectedImage.caption}
                 className="w-full h-auto max-h-[75vh] object-contain grayscale-[25%] sepia-[12%]"
               />
