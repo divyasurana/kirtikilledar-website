@@ -64,16 +64,46 @@ const Admin = () => {
     { path: '/admin/submissions', icon: MessageSquare, label: 'Messages' }
   ];
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-vintage-cream flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-sepia-dark text-vintage-cream flex flex-col">
-        <div className="p-6 border-b border-vintage-gold/30">
+    <div className="min-h-screen bg-vintage-cream flex flex-col md:flex-row">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-sepia-dark text-vintage-cream p-4 flex justify-between items-center">
+        <h1 className="text-xl font-display text-vintage-gold">Admin Panel</h1>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="text-vintage-cream p-2"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Sidebar - Hidden on mobile unless menu is open */}
+      <div className={`${
+        mobileMenuOpen ? 'fixed inset-0 z-50' : 'hidden'
+      } md:flex md:w-64 bg-sepia-dark text-vintage-cream flex-col`}>
+        {/* Close button for mobile */}
+        <div className="md:hidden flex justify-between items-center p-4 border-b border-vintage-gold/30">
+          <h1 className="text-2xl font-display text-vintage-gold">Menu</h1>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-vintage-cream p-2"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="hidden md:block p-6 border-b border-vintage-gold/30">
           <h1 className="text-2xl font-display text-vintage-gold">Admin Panel</h1>
           <p className="text-sm text-vintage-cream/70 mt-1 font-light">Kirti's Portfolio</p>
         </div>
 
-        <nav className="flex-1 p-4">
+        <nav className="flex-1 p-4 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -81,6 +111,7 @@ const Admin = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 mb-2 transition-colors duration-200 ${
                   isActive
                     ? 'bg-vintage-gold/20 text-vintage-gold border-l-2 border-vintage-gold'
@@ -105,8 +136,16 @@ const Admin = () => {
         </div>
       </div>
 
+      {/* Overlay for mobile menu */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto pt-20">
+      <div className="flex-1 overflow-y-auto pt-20 md:pt-20">
         <Routes>
           <Route path="/" element={<Navigate to="/admin/home" />} />
           <Route path="/login" element={<Navigate to="/admin/home" />} />
