@@ -8,7 +8,11 @@ const About = () => {
   useDocumentTitle('About');
   const [isVisible, setIsVisible] = useState(false);
   const [content, setContent] = useState({
-    image: 'https://images.unsplash.com/photo-1634595477722-7bc68dd410fd',
+    portrait_image: 'https://images.unsplash.com/photo-1634595477722-7bc68dd410fd',
+    background_text: 'I was born and raised in Mumbai, in a household where music was not just entertainment but a way of understanding the world. My mother sang around the house—old film songs, Marathi folk songs, bhajans. My father played the harmonium and had a deep love for Hindustani classical music. I didn\'t think of it as special at the time; it was simply the air I breathed.\n\nAs I grew older, I found myself drawn to storytelling in all its forms: theatre, film, literature. I realized that whether I was singing or acting, I was doing the same thing—trying to understand and express the complexity of being human. My artistic instinct has always been to look beneath the surface, to find what is unspoken, to give voice to what often remains silent.',
+    approach_text: 'My working philosophy is simple: listen deeply, observe quietly, and trust what you find.\n\nBefore I step into a character or interpret a piece of music, I spend time in silence. I watch people. I listen to the rhythms of their speech, the hesitations, the moments when words fail them. I notice the way hands move when someone is nervous, the way eyes shift when someone is hiding something, the micro-expressions that reveal what the mouth won\'t say.\n\nI believe that truth lives in small moments—a held breath, a pause before speaking, the way someone looks away. These are the details that make a performance feel real. These are the details that connect us to each other.',
+    influences_text: 'I draw inspiration from many sources, each teaching me different ways to see and understand the world.\n\nCinema has been a profound teacher—particularly the work of Satyajit Ray, whose films understand that the most powerful moments are often the quietest. The way Madhabi Mukherjee conveyed an entire interior world through a glance in Charulata changed how I think about performance.\n\nLiterature taught me the rhythm of language and the power of interiority. I return often to the poetry of Rumi, the short stories of Chekhov, and the novels of Jhumpa Lahiri—writers who understand loneliness, longing, and the distance between what we feel and what we can express.\n\nMy gurus in Hindustani classical music taught me discipline, patience, and the importance of riyaaz—daily practice not as drudgery but as meditation, as a way of life. They showed me that mastery comes not from brilliance but from devotion.',
+    quote: 'The best stories are not told—they are observed, felt, and lived. My work is simply an attempt to bear witness to the quiet magnificence of being human.',
     skills: [
       "Hindustani Classical Vocal",
       "Light Classical & Semi-Classical",
@@ -228,7 +232,7 @@ const About = () => {
                   </div>
                   
                   <blockquote className="text-2xl md:text-3xl font-display text-warm-brown leading-relaxed mb-8">
-                    The best stories are not told—they are observed, felt, and lived. My work is simply an attempt to bear witness to the quiet magnificence of being human.
+                    {content.quote || 'The best stories are not told—they are observed, felt, and lived. My work is simply an attempt to bear witness to the quiet magnificence of being human.'}
                   </blockquote>
                   
                   <div className="flex items-center gap-4">
