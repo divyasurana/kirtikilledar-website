@@ -204,7 +204,7 @@ const About = () => {
                   <div className="absolute -inset-3 border border-vintage-gold/30"></div>
                   
                   <img 
-                    src={content.image}
+                    src={content.portrait_image || content.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80'}
                     alt="Kirti Killedar"
                     className="w-full h-[500px] object-cover relative grayscale-[30%] sepia-[15%]"
                   />
