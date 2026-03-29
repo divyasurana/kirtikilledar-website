@@ -204,11 +204,11 @@ async def startup_db_client():
     db = client[os.environ['DB_NAME']]
     logging.info("Database connection established")
     
-    # Initialize Emergent Object Storage
+    # Initialize Cloudinary Storage
     try:
         from storage import init_storage
         init_storage()
-        logging.info("✅ Emergent Object Storage initialized")
+        logging.info("✅ Cloudinary storage initialized")
     except Exception as e:
         logging.error(f"❌ Storage initialization failed: {e}")
 
