@@ -16,10 +16,24 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# MongoDB connection - support both Atlas and local MongoDB
+# Use MONGODB_URI for production (MongoDB Atlas)
+# Falls back to MONGO_URL + DB_NAME for local development
+mongodb_uri = os.environ.get('MONGODB_URI')
+if mongodb_uri:
+    # MongoDB Atlas or full connection string
+    client = AsyncIOMotorClient(mongodb_uri)
+    # Extract database name from URI or use default
+    db_name = os.environ.get('DB_NAME', 'kirti_portfolio')
+    db = client[db_name]
+    logging.info("✅ Connected to MongoDB using MONGODB_URI")
+else:
+    # Local MongoDB
+    mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/')
+    db_name = os.environ.get('DB_NAME', 'kirti_portfolio')
+    client = AsyncIOMotorClient(mongo_url)
+    db = client[db_name]
+    logging.info(f"✅ Connected to local MongoDB: {mongo_url}{db_name}")
 
 # Create the main app without a prefix
 app = FastAPI()

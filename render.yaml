@@ -1,0 +1,39 @@
+services:
+  # FastAPI Backend Service
+  - type: web
+    name: kirti-portfolio-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: MONGODB_URI
+        sync: false
+        # Set this in Render dashboard with your MongoDB Atlas URI
+      - key: DB_NAME
+        value: kirti_portfolio
+      - key: CORS_ORIGINS
+        value: "*"
+        # Update with your Vercel frontend URL in production
+      - key: JWT_SECRET
+        generateValue: true
+        # Render will auto-generate a secure secret
+      - key: BACKEND_URL
+        value: https://kirti-portfolio-backend.onrender.com
+        # Update with your actual Render backend URL
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+        # Set this in Render dashboard
+      - key: CLOUDINARY_API_KEY
+        sync: false
+        # Set this in Render dashboard
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+        # Set this in Render dashboard
+      - key: EMERGENT_LLM_KEY
+        sync: false
+        # Optional: Set if using Emergent LLM features
+    healthCheckPath: /api/
