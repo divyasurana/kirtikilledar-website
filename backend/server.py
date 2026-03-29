@@ -1,5 +1,4 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Query, Header
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -38,12 +37,17 @@ else:
 # Create the main app without a prefix
 app = FastAPI()
 
-# Create uploads directory if it doesn't exist (in backend, not frontend)
-UPLOAD_DIR = Path("/app/backend/uploads")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+# Note: File uploads handled by Cloudinary (no local storage needed)
+# All uploaded files are stored in cloud and accessed via Cloudinary URLs
 
-# Mount static files for uploads
-app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
