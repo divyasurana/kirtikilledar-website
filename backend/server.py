@@ -41,13 +41,27 @@ app = FastAPI()
 # All uploaded files are stored in cloud and accessed via Cloudinary URLs
 
 # CORS Configuration
+# Get allowed origins from environment variable
+cors_origins_str = os.environ.get('CORS_ORIGINS', '*')
+
+# Parse CORS origins - handle both comma-separated and wildcard
+if cors_origins_str == '*':
+    allowed_origins = ['*']
+else:
+    # Split by comma and strip whitespace
+    allowed_origins = [origin.strip() for origin in cors_origins_str.split(',') if origin.strip()]
+
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Log CORS configuration
+logging.info(f"CORS enabled for origins: {allowed_origins}")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
