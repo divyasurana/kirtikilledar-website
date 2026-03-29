@@ -128,11 +128,13 @@ async def submit_contact_form(name: str, email: str, message: str):
     await db.contact_submissions.insert_one(submission)
     return {"message": "Message sent successfully"}
 
-# File download endpoint
+# File download endpoint (kept for backward compatibility with old URLs)
 @api_router.get("/files/{file_id}")
 async def download_file(file_id: str):
-    from storage import get_object
-    
+    """
+    Legacy endpoint for files stored before Cloudinary migration.
+    New uploads return Cloudinary URLs directly.
+    """
     # Find file in database
     file_record = await db.uploaded_files.find_one(
         {"id": file_id, "is_deleted": False},
@@ -142,11 +144,16 @@ async def download_file(file_id: str):
     if not file_record:
         raise HTTPException(status_code=404, detail="File not found")
     
+    # If file has Cloudinary URL, redirect to it
+    if "cloudinary_url" in file_record and file_record["cloudinary_url"]:
+        from fastapi.responses import RedirectResponse
+        return RedirectResponse(url=file_record["cloudinary_url"], status_code=301)
+    
+    # Fallback: try to fetch from old storage (for backward compatibility)
     try:
-        # Download from storage
+        from storage import get_object
         data, content_type = get_object(file_record["storage_path"])
         
-        # Return file with correct content type
         return Response(
             content=data,
             media_type=file_record.get("content_type", content_type),

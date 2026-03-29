@@ -91,26 +91,27 @@ async def upload_file(file: UploadFile = File(...), user: dict = Depends(verify_
     content_type = file.content_type or get_content_type(file.filename)
     
     try:
-        # Upload to Emergent Object Storage
+        # Upload to Cloudinary
         result = put_object(storage_path, file_data, content_type)
         
         # Store metadata in MongoDB
         file_record = {
             "id": unique_id,
             "storage_path": result["path"],
+            "cloudinary_url": result["secure_url"],
             "original_filename": file.filename,
             "content_type": content_type,
             "size": result["size"],
+            "resource_type": result.get("resource_type", "image"),
             "is_deleted": False,
             "uploaded_by": user.get("id"),
             "created_at": datetime.now(timezone.utc)
         }
         await db.uploaded_files.insert_one(file_record)
         
-        # Return URL that frontend can use
-        backend_url = os.environ.get('BACKEND_URL', 'http://localhost:8001')
+        # Return Cloudinary URL directly (no need for backend proxy)
         return {
-            "url": f"{backend_url}/api/files/{unique_id}",
+            "url": result["secure_url"],
             "id": unique_id,
             "filename": file.filename,
             "size": result["size"]
