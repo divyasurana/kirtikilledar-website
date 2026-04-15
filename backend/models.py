@@ -86,6 +86,8 @@ class GalleryImage(BaseModel):
     image_url: str
     caption: str
     category: str
+    resource_type: str = "image"  # "image" or "video"
+    public_id: Optional[str] = None  # Cloudinary public ID for deletion
     order: int = 0
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -93,6 +95,8 @@ class GalleryImageCreate(BaseModel):
     image_url: str
     caption: str
     category: str
+    resource_type: str = "image"
+    public_id: Optional[str] = None
 
 # Contact Info Model
 class ContactInfo(BaseModel):

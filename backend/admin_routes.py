@@ -103,6 +103,7 @@ async def upload_file(file: UploadFile = File(...), user: dict = Depends(verify_
             "content_type": content_type,
             "size": result["size"],
             "resource_type": result.get("resource_type", "image"),
+            "public_id": result.get("path"),  # Cloudinary public ID
             "is_deleted": False,
             "uploaded_by": user.get("id"),
             "created_at": datetime.now(timezone.utc)
@@ -114,7 +115,9 @@ async def upload_file(file: UploadFile = File(...), user: dict = Depends(verify_
             "url": result["secure_url"],
             "id": unique_id,
             "filename": file.filename,
-            "size": result["size"]
+            "size": result["size"],
+            "resource_type": result.get("resource_type", "image"),
+            "public_id": result.get("path")  # Return public_id for deletion
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
@@ -194,10 +197,32 @@ async def add_gallery_image(data: dict, user: dict = Depends(verify_token)):
 @router.delete("/gallery/{image_id}")
 async def delete_gallery_image(image_id: str, user: dict = Depends(verify_token)):
     from server import db
+    from storage import delete_object
+    import logging
+    
+    # Get the gallery item to find its public_id
+    item = await db.gallery_images.find_one({"id": image_id}, {"_id": 0})
+    
+    if not item:
+        raise HTTPException(status_code=404, detail="Gallery item not found")
+    
+    # Delete from Cloudinary if public_id exists
+    if item.get("public_id"):
+        try:
+            resource_type = item.get("resource_type", "image")
+            delete_object(item["public_id"], resource_type=resource_type)
+            logging.info(f"✅ Deleted from Cloudinary: {item['public_id']}")
+        except Exception as e:
+            logging.warning(f"⚠️ Could not delete from Cloudinary: {e}")
+            # Continue with database deletion even if Cloudinary delete fails
+    
+    # Delete from database
     result = await db.gallery_images.delete_one({"id": image_id})
+    
     if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Image not found")
-    return {"message": "Image deleted"}
+        raise HTTPException(status_code=404, detail="Gallery item not found")
+    
+    return {"message": "Gallery item deleted", "cloudinary_deleted": bool(item.get("public_id"))}
 
 @router.get("/contact")
 async def get_contact_info(user: dict = Depends(verify_token)):
