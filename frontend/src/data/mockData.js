@@ -181,11 +181,11 @@ Because in a noisy world, sometimes the most radical act is to pay attention.`
   
   social: {
     instagram: "https://www.instagram.com/kirti.killedar/",
-    email: "contact@kirtikilledar.com"
+    email: "singerkirti@gmail.com"
   },
   
   contact: {
     description: "For collaboration inquiries, bookings, or just to say hello.",
-    email: "contact@kirtikilledar.com"
+    email: "singerkirti@gmail.com"
   }
 };
