@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import ProgressiveImage from '../components/ProgressiveImage';
+import { getOptimizedCloudinaryURL } from '../utils/cloudinary';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -20,6 +22,21 @@ const Home = () => {
     setIsVisible(true);
     fetchContent();
   }, []);
+
+  useEffect(() => {
+    // Preload hero image for faster loading
+    if (content.hero_image) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = getOptimizedCloudinaryURL(content.hero_image);
+      document.head.appendChild(link);
+      
+      return () => {
+        document.head.removeChild(link);
+      };
+    }
+  }, [content.hero_image]);
 
   const fetchContent = async () => {
     try {
@@ -96,17 +113,11 @@ const Home = () => {
                 <div className="absolute -inset-4 border-2 border-vintage-gold/30 hidden lg:block"></div>
                 <div className="absolute -inset-2 border border-vintage-gold/20 hidden lg:block"></div>
                 
-                <img 
+                <ProgressiveImage
                   src={content.hero_image}
                   alt="Kirti Killedar"
                   className="w-full h-[600px] lg:h-[700px] object-cover relative grayscale-[20%] contrast-[1.1] sepia-[10%]"
-                  onError={(e) => {
-                    console.error('Image failed to load:', content.hero_image);
-                    console.error('Image error event:', e);
-                  }}
-                  onLoad={() => {
-                    console.log('Image loaded successfully:', content.hero_image);
-                  }}
+                  priority={true}
                 />
                 
                 <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-vintage-gold"></div>

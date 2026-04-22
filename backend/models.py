@@ -28,7 +28,6 @@ class AboutContent(BaseModel):
     portrait_image: str
     background_text: str
     approach_text: str
-    influences_text: str
     skills: List[str]
     quote: str
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -103,6 +102,9 @@ class ContactInfo(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     email: str
     instagram_url: str
+    spotify_url: Optional[str] = ""
+    facebook_url: Optional[str] = ""
+    youtube_url: Optional[str] = ""
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 # Contact Form Submission

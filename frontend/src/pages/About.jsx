@@ -163,47 +163,6 @@ const About = () => {
               <div className="w-2 h-2 border border-vintage-gold rotate-45"></div>
             </div>
 
-            {/* Influences Section */}
-            <div className={`transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              <div className="mb-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-0.5 bg-vintage-gold"></div>
-                  <h2 className="text-sm tracking-[0.3em] uppercase text-sepia-dark font-light">Influences</h2>
-                </div>
-              </div>
-              
-              <div className="space-y-6 mb-12">
-                {content.influences_text ? (
-                  content.influences_text.split('\n\n').map((para, i) => (
-                    <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed" dangerouslySetInnerHTML={{
-                      __html: para.replace(/\*\*(.*?)\*\*/g, '<strong class="text-warm-brown">$1</strong>').replace(/_(.*?)_/g, '<em>$1</em>')
-                    }} />
-                  ))
-                ) : (
-                  <>
-                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                      I draw inspiration from many sources, each teaching me different ways to see and understand the world.
-                    </p>
-                    
-                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                      <strong className="text-warm-brown">Cinema</strong> has been a profound teacher—particularly the work of Satyajit Ray, whose films understand that the most powerful moments are often the quietest. The way Madhabi Mukherjee conveyed an entire interior world through a glance in <em>Charulata</em> changed how I think about performance.
-                    </p>
-                    
-                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                      <strong className="text-warm-brown">Literature</strong> taught me the rhythm of language and the power of interiority. I return often to the poetry of Rumi, the short stories of Chekhov, and the novels of Jhumpa Lahiri—writers who understand loneliness, longing, and the distance between what we feel and what we can express.
-                    </p>
-                    
-                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                      <strong className="text-warm-brown">Theatre</strong> gave me the courage to be vulnerable in front of others. There is nowhere to hide on stage. You must be present. You must be truthful. This discipline carries into everything I do.
-                    </p>
-                    
-                    <p className="text-lg text-sepia-dark/80 leading-relaxed">
-                      But perhaps my greatest influence is <strong className="text-warm-brown">everyday human behavior</strong>—the small dramas that unfold in cafes, on trains, in waiting rooms. The way a stranger's face changes when they receive unexpected news. The body language of a couple sitting in silence. These are the moments that remind me why I make art: to honor the complexity and beauty of ordinary life.
-                    </p>
-                  </>
-                )}
-              </div>
-
               {/* Skills/Practices */}
               <div className="bg-antique-white p-8 border border-vintage-gold/20">
                 <h3 className="text-xs tracking-[0.3em] uppercase text-vintage-gold mb-6 font-light">Areas of Practice</h3>

@@ -9,7 +9,6 @@ const AdminAbout = () => {
     portrait_image: '',
     background_text: '',
     approach_text: '',
-    influences_text: '',
     skills: [],
     quote: ''
   });
@@ -128,16 +127,6 @@ const AdminAbout = () => {
           <textarea
             value={content.approach_text || ''}
             onChange={(e) => setContent({ ...content, approach_text: e.target.value })}
-            rows="6"
-            className="w-full px-4 py-3 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none resize-none"
-          ></textarea>
-        </div>
-
-        <div>
-          <label className="block text-sm tracking-wider uppercase text-sepia-dark mb-2">Influences Text</label>
-          <textarea
-            value={content.influences_text || ''}
-            onChange={(e) => setContent({ ...content, influences_text: e.target.value })}
             rows="6"
             className="w-full px-4 py-3 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none resize-none"
           ></textarea>
