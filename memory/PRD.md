@@ -293,3 +293,28 @@ Response: { posts: [...] }
 - Vintage Charulata aesthetic applied
 - Responsive design complete
 - Smooth transitions and hover effects added
+
+
+**v2.0 - Jan/Feb 2026 - Production Migration & Feature Batch**
+- Migrated file storage from Emergent Object Store → Cloudinary (images + videos)
+- Migrated database from local MongoDB → MongoDB Atlas
+- Removed `emergentintegrations` package and fixed Google API dep conflicts for Render
+- Removed local filesystem writes (`StaticFiles` mount) — Render read-only compatible
+- Prepared `render.yaml` (backend) + `vercel.json` (frontend) for deployment
+- Added Hero Image LQIP via `ProgressiveImage.jsx` component
+- Added Spotify, Facebook, YouTube social links (backend model + admin + Footer + Contact)
+- Added Gallery video upload support (Cloudinary `resource_type=video`, `<video>` playback)
+- Removed "Influences" section from About page
+- Fixed Footer contact email (contact@kirtikilledar.com)
+- Fixed duplicate CORSMiddleware registration in server.py
+- Fixed About.jsx JSX syntax regression blocking Vercel build
+- ProgressiveImage: camelCase `fetchPriority` to silence React DOM warning
+
+**Verified via testing_agent_v3_fork (iteration_4.json) on Feb 2026:**
+- Backend: 5/5 executable tests pass, 1 skipped (synthetic mp4 limitation)
+- Frontend: All flows (Home LQIP, About, Contact, Footer socials, Gallery, Admin login) verified
+
+**Open items / Backlog:**
+- Upload a real mp4 via admin Gallery to validate `<video>` playback end-to-end (data-level, not code-level)
+- Refine past vs upcoming events logic (P2)
+- Optional blog/writing section (P3)
