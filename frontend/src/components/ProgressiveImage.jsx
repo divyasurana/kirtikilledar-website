@@ -55,7 +55,7 @@ const ProgressiveImage = ({
         transition: 'filter 0.3s ease-out'
       }}
       loading={priority ? 'eager' : 'lazy'}
-      fetchpriority={priority ? 'high' : 'auto'}
+      fetchPriority={priority ? 'high' : 'auto'}
       {...props}
     />
   );
