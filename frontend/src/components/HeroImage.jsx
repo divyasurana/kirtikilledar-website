@@ -55,7 +55,7 @@ const HeroImage = ({ src, alt = '', className = '', style = {}, ...props }) => {
           alt={alt}
           onLoad={() => setLoaded(true)}
           loading="eager"
-          fetchpriority="high"
+          fetchPriority="high"
           decoding="async"
           data-testid="hero-image"
           style={{

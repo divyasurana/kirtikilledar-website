@@ -318,3 +318,16 @@ Response: { posts: [...] }
 - Upload a real mp4 via admin Gallery to validate `<video>` playback end-to-end (data-level, not code-level)
 - Refine past vs upcoming events logic (P2)
 - Optional blog/writing section (P3)
+
+**v2.1 - Feb 2026 - Hero Optimisation & Rich Text Editor**
+- `HeroImage.jsx` replaces ProgressiveImage on Home hero. Serves via Cloudinary `f_auto,q_auto,w_1200`, caches URL in `localStorage[hero_image_url_v1]` for instant repeat-visit paint, uses `loading="eager"` + `fetchPriority="high"`, solid `#1a1a1a` wrapper while loading, 0.4s opacity fade-in. All Unsplash fallback images removed.
+- TipTap rich text editor (`RichTextEditor.jsx`) rolled out across long-form admin fields:
+  - Admin Home: `intro_text`
+  - Admin About: `background_text`, `approach_text`, `quote`
+  - Admin Projects (modal): `description`, `summary`, `creative_process`, `behind_scenes`
+  - Admin Events (modal): `description`
+  - Toolbar: Bold, Italic, Link (forced `target=_blank rel=noopener noreferrer`), Bullet list
+- `RichText.jsx` (DOMPurify-sanitised `dangerouslySetInnerHTML`) used on all public pages (Home / About / Work / Events) to render HTML safely. Backward compatible with legacy plain-text `\n\n` paragraphs (auto-converted to `<p>` blocks).
+- Added `@tiptap/react`, `@tiptap/starter-kit`, `@tiptap/extension-link`, `dompurify` to package.json.
+- Verified via `testing_agent_v3_fork` iteration_5.json — 100% pass; DOMPurify confirmed to strip `<script>` tags on public render.
+
