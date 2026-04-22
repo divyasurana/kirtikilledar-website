@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Upload, Save } from 'lucide-react';
+import RichTextEditor from '../RichTextEditor';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -142,13 +143,11 @@ const AdminHome = () => {
           <label className="block text-sm tracking-wider uppercase text-sepia-dark mb-2 font-light">
             Introduction Text
           </label>
-          <textarea
+          <RichTextEditor
             value={content.intro_text || ''}
-            onChange={(e) => setContent({ ...content, intro_text: e.target.value })}
-            rows="6"
+            onChange={(html) => setContent({ ...content, intro_text: html })}
             placeholder="Introduction about artistic sensibility..."
-            className="w-full px-4 py-3 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none font-light resize-none"
-          ></textarea>
+          />
         </div>
 
         <button

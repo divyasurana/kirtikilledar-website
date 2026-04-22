@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import useDocumentTitle from '../hooks/useDocumentTitle';
-import ProgressiveImage from '../components/ProgressiveImage';
-import { getOptimizedCloudinaryURL } from '../utils/cloudinary';
+import HeroImage from '../components/HeroImage';
+import RichText from '../components/RichText';
+import { getHeroCloudinaryURL } from '../utils/cloudinary';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -11,7 +12,7 @@ const Home = () => {
   useDocumentTitle('Home');
   const [isVisible, setIsVisible] = useState(false);
   const [content, setContent] = useState({
-    hero_image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1200&q=80',
+    hero_image: '',
     tagline: 'A quiet observer of people, stories, and moments.',
     intro_text: 'Through music and performance, I seek to explore the depth of human emotion.'
   });
@@ -29,7 +30,7 @@ const Home = () => {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'image';
-      link.href = getOptimizedCloudinaryURL(content.hero_image);
+      link.href = getHeroCloudinaryURL(content.hero_image);
       document.head.appendChild(link);
       
       return () => {
@@ -51,14 +52,9 @@ const Home = () => {
         })
       ]);
 
-      console.log('Home API Response:', homeRes.data);
-
       // Only update if we have valid data with a working hero_image
       if (homeRes.data && Object.keys(homeRes.data).length > 0 && homeRes.data.hero_image && homeRes.data.hero_image !== 'https://test-image-url.com/hero.jpg') {
         setContent(homeRes.data);
-        console.log('Content updated with:', homeRes.data);
-      } else {
-        console.warn('Using default content - API returned empty or invalid data');
       }
       
       if (projectsRes.data && projectsRes.data.length > 0) {
@@ -92,9 +88,10 @@ const Home = () => {
                 
                 <div className="w-16 h-0.5 bg-vintage-gold mb-8"></div>
                 
-                <p className="text-lg text-sepia-dark/70 leading-relaxed mb-12">
-                  {content.intro_text}
-                </p>
+                <RichText
+                  content={content.intro_text}
+                  className="text-lg text-sepia-dark/70 leading-relaxed mb-12 rich-text"
+                />
                 
                 <div className="flex gap-4">
                   <Link 
@@ -113,11 +110,10 @@ const Home = () => {
                 <div className="absolute -inset-4 border-2 border-vintage-gold/30 hidden lg:block"></div>
                 <div className="absolute -inset-2 border border-vintage-gold/20 hidden lg:block"></div>
                 
-                <ProgressiveImage
+                <HeroImage
                   src={content.hero_image}
                   alt="Kirti Killedar"
-                  className="w-full h-[600px] lg:h-[700px] object-cover relative grayscale-[20%] contrast-[1.1] sepia-[10%]"
-                  priority={true}
+                  className="w-full h-[600px] lg:h-[700px] relative grayscale-[20%] contrast-[1.1] sepia-[10%]"
                 />
                 
                 <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-vintage-gold"></div>
@@ -186,9 +182,10 @@ const Home = () => {
                       </h3>
                       <span className="text-sm text-sepia-dark/50">{project.year}</span>
                     </div>
-                    <p className="text-sepia-dark/70 leading-relaxed">
-                      {project.description}
-                    </p>
+                    <RichText
+                      content={project.description}
+                      className="text-sepia-dark/70 leading-relaxed"
+                    />
                   </Link>
                 ))}
               </div>

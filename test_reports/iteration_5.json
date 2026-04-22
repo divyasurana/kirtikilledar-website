@@ -1,0 +1,63 @@
+{
+  "summary": "Verified Jan-2026 iteration 5: (A) HeroImage component on public / — solid #1a1a1a wrapper, data-testid hero-image-wrapper + hero-image, lowercase fetchpriority='high', loading='eager', decoding='async', Cloudinary src with f_auto,q_auto,w_1200, transition 'opacity 0.4s ease-out', no old unsplash fallback. localStorage key 'hero_image_url_v1' is set after first load. (B) TipTap RichTextEditor rolled out to Admin Home (1 RTE), Admin About (3 RTEs: background/approach/quote), Admin Projects Add-modal (4 RTEs: description/summary/creative_process/behind_scenes), Admin Events Add-modal (1 RTE: description) — 0 legacy <textarea> elements remain on these screens. (C) End-to-end save: logged in as admin, POSTed intro_text HTML with <strong>, <a> and <script>alert(1)</script> via /api/admin/home; public / renders <strong>bold-world</strong>, anchor href=https://example.com with target='_blank' and rel='noopener noreferrer', script_count=0 (DOMPurify strips). Original intro restored after test. (D) Backward compat: About page renders 12 <p> blocks from legacy plain-text with no raw \\n\\n visible. (E) Regression: Events page renders; Work page loads 10 images; admin login works with admin/Kirti2024!.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/admin/home", "issue": "Backend stores intro_text raw (sanitization is client-side via DOMPurify). Confirmed expected behaviour per design; flagging so future server-rendered or non-React consumers know to sanitize."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "HeroImage.jsx", "issue": "React logs 'Invalid DOM property fetchpriority. Did you mean fetchPriority?' on every Home mount. React 18 expects camelCase `fetchPriority` as a JSX prop; it still forwards the lowercase HTML attribute to the DOM (which is what the review requested), so functionally correct, but console is noisy. Note: iteration 4 already renamed the same prop to camelCase in ProgressiveImage.jsx.", "selector": "[data-testid=\"hero-image\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Admin Events modal (/admin/events)", "issues": ["Uses browser-native <input type=\"date\"> / <input type=\"time\"> pickers instead of shadcn calendar component. Not in scope of this review but persists from prior iterations."]}
+    ],
+    "verified_working": [
+      {"component": "HeroImage (public /)", "status": "wrapper bg rgb(26,26,26), img with loading=eager, fetchpriority=high, decoding=async, src has f_auto,q_auto,w_1200, transition=opacity 0.4s ease-out, opacity=1 after load"},
+      {"component": "localStorage cache", "status": "hero_image_url_v1 key populated with optimised Cloudinary URL"},
+      {"component": "No default placeholder", "status": "'1534528741775-53994a69daeb' not found anywhere in DOM"},
+      {"component": "Admin Home RTE", "status": "1 rich-text-editor-wrapper, 0 textareas; all 4 toolbar buttons (rte-bold/italic/link/bullet) present"},
+      {"component": "Admin About RTE", "status": "3 rich-text-editor-wrappers (background/approach/quote), 0 textareas"},
+      {"component": "Admin Projects modal RTE", "status": "4 rich-text-editor-wrappers, 0 textareas"},
+      {"component": "Admin Events modal RTE", "status": "1 rich-text-editor-wrapper, 0 textareas"},
+      {"component": "End-to-end RTE → public render", "status": "<strong>bold-world</strong> rendered; <a target=_blank rel='noopener noreferrer' href='https://example.com'>; <script> stripped (count=0)"},
+      {"component": "About backward compat", "status": "12 <p> blocks inside .rich-text, no raw '\\n\\n' in rendered text"},
+      {"component": "Events/Work regression", "status": "Events list renders upcoming events; Work page loads (10 project images); 0 error selectors on page"}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_rte_backend.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "LOW: Rename `fetchpriority` JSX prop to `fetchPriority` in /app/frontend/src/components/HeroImage.jsx line 58 to silence the React 18 DOM warning. React still emits the attribute lowercase to the DOM, so no functional change — only console hygiene. (Same fix was applied to ProgressiveImage.jsx in iteration 4.)",
+    "(Optional) If any non-browser consumer ever reads intro_text / about fields, add server-side HTML sanitization since DOMPurify currently only runs client-side in the React app."
+  ],
+  "critical_code_review_comments": [
+    "HeroImage.jsx — localStorage cache correctly uses CACHE_KEY='hero_image_url_v1'; try/catch guards quota/privacy-mode errors. Clean.",
+    "HeroImage.jsx — `fetchpriority` lowercase attr: React 18 prints warning; consider `fetchPriority` camelCase (React 18 forwards to DOM as lowercase). Functional requirement satisfied.",
+    "RichTextEditor.jsx — Link extension configured with openOnClick=false, autolink=true, HTMLAttributes forcing target=_blank + rel=noopener noreferrer. Good.",
+    "RichText.jsx — afterSanitizeAttributes hook forcibly sets target+rel on every anchor; removeHook after sanitize prevents hook leakage. DOMPurify ALLOWED_TAGS list is reasonable and excludes script/iframe/style/svg/etc. Good.",
+    "RichText.jsx — plainTextToHtml escapes HTML special chars before wrapping in <p>, preventing stored-XSS via legacy plain-text fields. Good.",
+    "server.py (from prev iteration) still has one CORSMiddleware registration (line 55). Earlier iter_4 noted a duplicate at L203 — verified it is no longer present."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_rte_backend.py (new)"
+  ],
+  "success_rate": {
+    "backend": "100% (4/4 pytest cases passed)",
+    "frontend": "100% of in-scope flows verified (hero image, RTE admin panels x4, RTE→public e2e, DOMPurify XSS strip, backward compat, regression on Events/Work)"
+  },
+  "test_credentials": {
+    "admin_username": "admin",
+    "admin_password": "Kirti2024!",
+    "source": "/app/memory/test_credentials.md"
+  },
+  "seed_data_creation": "During test, Home intro_text was temporarily replaced with bold+link+script HTML to verify DOMPurify. Original intro_text was captured before edit and restored (POST /api/admin/home returned 200). No residual test data remaining.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Hero image optimization + TipTap RichTextEditor rollout fully verified end-to-end. Only leftover item is a LOW-severity React 18 console warning about lowercase `fetchpriority` on the hero <img> — rename JSX prop to `fetchPriority` (camelCase) in HeroImage.jsx:58 to fix. Backend persists RTE HTML as-is (sanitization is client-side only via DOMPurify). Admin token stored under localStorage key `admin_token` (JWT, ~183 chars). Events modal still uses native date picker (pre-existing, out of scope).",
+  "rca of the issue": "N/A — no bugs required RCA. Single LOW finding (fetchpriority camelCase) is cosmetic."
+}

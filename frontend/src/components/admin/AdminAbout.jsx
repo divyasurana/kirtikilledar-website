@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Upload, Save } from 'lucide-react';
+import RichTextEditor from '../RichTextEditor';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -114,22 +115,18 @@ const AdminAbout = () => {
 
         <div>
           <label className="block text-sm tracking-wider uppercase text-sepia-dark mb-2">Background Text</label>
-          <textarea
+          <RichTextEditor
             value={content.background_text || ''}
-            onChange={(e) => setContent({ ...content, background_text: e.target.value })}
-            rows="6"
-            className="w-full px-4 py-3 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none resize-none"
-          ></textarea>
+            onChange={(html) => setContent({ ...content, background_text: html })}
+          />
         </div>
 
         <div>
           <label className="block text-sm tracking-wider uppercase text-sepia-dark mb-2">Approach Text</label>
-          <textarea
+          <RichTextEditor
             value={content.approach_text || ''}
-            onChange={(e) => setContent({ ...content, approach_text: e.target.value })}
-            rows="6"
-            className="w-full px-4 py-3 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none resize-none"
-          ></textarea>
+            onChange={(html) => setContent({ ...content, approach_text: html })}
+          />
         </div>
 
         <div>
@@ -159,12 +156,10 @@ const AdminAbout = () => {
 
         <div>
           <label className="block text-sm tracking-wider uppercase text-sepia-dark mb-2">Quote</label>
-          <textarea
+          <RichTextEditor
             value={content.quote || ''}
-            onChange={(e) => setContent({ ...content, quote: e.target.value })}
-            rows="3"
-            className="w-full px-4 py-3 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none resize-none"
-          ></textarea>
+            onChange={(html) => setContent({ ...content, quote: html })}
+          />
         </div>
 
         <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-6 py-3 bg-warm-brown text-vintage-cream hover:bg-burnt-sienna transition-all">

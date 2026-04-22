@@ -44,3 +44,15 @@ export const getProgressiveImageURLs = (imageUrl) => {
     optimized: getOptimizedCloudinaryURL(imageUrl)
   };
 };
+
+/**
+ * Get hero-optimized Cloudinary URL (auto format, auto quality, 1200px wide)
+ * @param {string} imageUrl - Original Cloudinary image URL
+ * @returns {string}
+ */
+export const getHeroCloudinaryURL = (imageUrl) => {
+  if (!imageUrl || !imageUrl.includes('cloudinary.com')) {
+    return imageUrl;
+  }
+  return imageUrl.replace('/upload/', '/upload/f_auto,q_auto,w_1200/');
+};

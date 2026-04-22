@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import RichText from '../components/RichText';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -94,9 +95,10 @@ const About = () => {
               
               <div className="space-y-6">
                 {content.background_text ? (
-                  content.background_text.split('\n\n').map((para, i) => (
-                    <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed">{para}</p>
-                  ))
+                  <RichText
+                    content={content.background_text}
+                    className="text-lg text-sepia-dark/80 leading-relaxed"
+                  />
                 ) : (
                   <>
                     <p className="text-lg text-sepia-dark/80 leading-relaxed">
@@ -131,11 +133,10 @@ const About = () => {
               
               <div className="space-y-6">
                 {content.approach_text ? (
-                  content.approach_text.split('\n\n').map((para, i) => (
-                    <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed" dangerouslySetInnerHTML={{
-                      __html: para.replace(/\*\*(.*?)\*\*/g, '<strong class="text-warm-brown">$1</strong>').replace(/_(.*?)_/g, '<em>$1</em>')
-                    }} />
-                  ))
+                  <RichText
+                    content={content.approach_text}
+                    className="text-lg text-sepia-dark/80 leading-relaxed"
+                  />
                 ) : (
                   <>
                     <p className="text-lg text-sepia-dark/80 leading-relaxed">
@@ -221,7 +222,11 @@ const About = () => {
                   </div>
                   
                   <blockquote className="text-2xl md:text-3xl font-display text-warm-brown leading-relaxed mb-8">
-                    {content.quote || 'The best stories are not told—they are observed, felt, and lived. My work is simply an attempt to bear witness to the quiet magnificence of being human.'}
+                    {content.quote ? (
+                      <RichText content={content.quote} />
+                    ) : (
+                      'The best stories are not told—they are observed, felt, and lived. My work is simply an attempt to bear witness to the quiet magnificence of being human.'
+                    )}
                   </blockquote>
                   
                   <div className="flex items-center gap-4">

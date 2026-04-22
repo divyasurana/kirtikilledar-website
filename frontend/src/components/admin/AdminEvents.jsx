@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Edit2, Trash2, Save, X, Calendar, MapPin, Clock } from 'lucide-react';
+import RichTextEditor from '../RichTextEditor';
+import RichText from '../RichText';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -202,13 +204,11 @@ const AdminEvents = () => {
 
               <div>
                 <label className="block text-sm mb-2 tracking-wider uppercase text-sepia-dark">Description</label>
-                <textarea
+                <RichTextEditor
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows="4"
+                  onChange={(html) => setFormData({ ...formData, description: html })}
                   placeholder="Brief description of the event..."
-                  className="w-full px-4 py-3 border border-warm-brown/20 focus:border-vintage-gold focus:outline-none resize-none"
-                ></textarea>
+                />
               </div>
 
               <div>
@@ -289,7 +289,10 @@ const AdminEvents = () => {
                       )}
                       
                       {event.description && (
-                        <p className="text-sm text-sepia-dark/70 leading-relaxed">{event.description}</p>
+                        <RichText
+                          content={event.description}
+                          className="text-sm text-sepia-dark/70 leading-relaxed"
+                        />
                       )}
                       
                       {event.ticket_url && (

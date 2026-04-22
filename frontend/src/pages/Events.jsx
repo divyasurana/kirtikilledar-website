@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Calendar, MapPin, Clock, ExternalLink } from 'lucide-react';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import RichText from '../components/RichText';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -141,9 +142,10 @@ const Events = () => {
                           )}
 
                           {event.description && (
-                            <p className="text-sepia-dark/70 leading-relaxed mb-4 font-light">
-                              {event.description}
-                            </p>
+                            <RichText
+                              content={event.description}
+                              className="text-sepia-dark/70 leading-relaxed mb-4 font-light"
+                            />
                           )}
 
                           {event.ticket_url && (

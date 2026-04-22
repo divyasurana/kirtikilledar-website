@@ -3,6 +3,7 @@ import { X, Music, Video } from 'lucide-react';
 import axios from 'axios';
 import AudioPlayer from '../components/AudioPlayer';
 import VideoPlayer from '../components/VideoPlayer';
+import RichText from '../components/RichText';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -127,9 +128,10 @@ const Work = () => {
                     {project.title}
                   </h3>
                   
-                  <p className="text-sepia-dark/70 leading-relaxed mb-4 font-light">
-                    {project.description}
-                  </p>
+                  <RichText
+                    content={project.description}
+                    className="text-sepia-dark/70 leading-relaxed mb-4 font-light"
+                  />
                   
                   <div className="flex items-center gap-2 text-warm-brown group-hover:text-vintage-gold transition-colors duration-300">
                     <span className="text-sm tracking-wider uppercase font-light">
@@ -218,11 +220,10 @@ const Work = () => {
                   </h3>
                   <div className="space-y-4">
                     {selectedProject.summary ? (
-                      selectedProject.summary.split('\n\n').map((para, i) => (
-                        <p key={i} className="text-lg text-sepia-dark/80 leading-relaxed font-light">
-                          {para}
-                        </p>
-                      ))
+                      <RichText
+                        content={selectedProject.summary}
+                        className="text-lg text-sepia-dark/80 leading-relaxed font-light"
+                      />
                     ) : (
                       <p className="text-lg text-sepia-dark/80 leading-relaxed font-light">
                         {selectedProject.description} This project represented an important exploration of {selectedProject.category === 'singing' ? 'musical expression and vocal technique' : 'character depth and emotional authenticity'}, allowing me to delve into {selectedProject.category === 'singing' ? 'the nuances of melody and rhythm' : 'the psychology of the character and their inner world'}.
@@ -238,11 +239,10 @@ const Work = () => {
                   </h3>
                   <div className="space-y-4">
                     {selectedProject.creative_process ? (
-                      selectedProject.creative_process.split('\n\n').map((para, i) => (
-                        <p key={i} className="text-sepia-dark/80 leading-relaxed font-light">
-                          {para}
-                        </p>
-                      ))
+                      <RichText
+                        content={selectedProject.creative_process}
+                        className="text-sepia-dark/80 leading-relaxed font-light"
+                      />
                     ) : (
                       <>
                         <p className="text-sepia-dark/80 leading-relaxed font-light">
@@ -262,13 +262,10 @@ const Work = () => {
                     Behind the Scenes
                   </h3>
                   {selectedProject.behind_scenes ? (
-                    <div className="space-y-4">
-                      {selectedProject.behind_scenes.split('\n\n').map((para, i) => (
-                        <p key={i} className="text-sepia-dark/70 italic leading-relaxed font-light">
-                          {para}
-                        </p>
-                      ))}
-                    </div>
+                    <RichText
+                      content={selectedProject.behind_scenes}
+                      className="text-sepia-dark/70 italic leading-relaxed font-light"
+                    />
                   ) : (
                     <p className="text-sepia-dark/70 italic leading-relaxed font-light">
                       {selectedProject.category === 'singing' 

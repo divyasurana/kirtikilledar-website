@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Edit2, Trash2, Upload, Save, X } from 'lucide-react';
+import RichTextEditor from '../RichTextEditor';
+import RichText from '../RichText';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -183,12 +185,10 @@ const AdminProjects = () => {
 
               <div>
                 <label className="block text-sm mb-2">Description</label>
-                <textarea
+                <RichTextEditor
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows="3"
-                  className="w-full px-4 py-2 border border-warm-brown/20 resize-none"
-                ></textarea>
+                  onChange={(html) => setFormData({ ...formData, description: html })}
+                />
               </div>
 
               <div>
@@ -229,32 +229,26 @@ const AdminProjects = () => {
 
               <div>
                 <label className="block text-sm mb-2">Summary</label>
-                <textarea
+                <RichTextEditor
                   value={formData.summary}
-                  onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
-                  rows="3"
-                  className="w-full px-4 py-2 border border-warm-brown/20 resize-none"
-                ></textarea>
+                  onChange={(html) => setFormData({ ...formData, summary: html })}
+                />
               </div>
 
               <div>
                 <label className="block text-sm mb-2">Creative Process</label>
-                <textarea
+                <RichTextEditor
                   value={formData.creative_process}
-                  onChange={(e) => setFormData({ ...formData, creative_process: e.target.value })}
-                  rows="3"
-                  className="w-full px-4 py-2 border border-warm-brown/20 resize-none"
-                ></textarea>
+                  onChange={(html) => setFormData({ ...formData, creative_process: html })}
+                />
               </div>
 
               <div>
                 <label className="block text-sm mb-2">Behind the Scenes</label>
-                <textarea
+                <RichTextEditor
                   value={formData.behind_scenes}
-                  onChange={(e) => setFormData({ ...formData, behind_scenes: e.target.value })}
-                  rows="3"
-                  className="w-full px-4 py-2 border border-warm-brown/20 resize-none"
-                ></textarea>
+                  onChange={(html) => setFormData({ ...formData, behind_scenes: html })}
+                />
               </div>
 
               <div className="flex gap-4">
@@ -282,7 +276,7 @@ const AdminProjects = () => {
             <div key={project.id} className="bg-white border border-vintage-gold/20 p-4">
               {project.image && <img src={project.image} alt={project.title} className="w-full h-48 object-cover mb-4" />}
               <h3 className="text-xl font-display text-warm-brown mb-2">{project.title}</h3>
-              <p className="text-sm text-sepia-dark/70 mb-4">{project.description}</p>
+              <RichText content={project.description} className="text-sm text-sepia-dark/70 mb-4" />
               <div className="flex justify-between items-center">
                 <span className="text-xs text-vintage-gold">{project.type} • {project.year}</span>
                 <div className="flex gap-2">
