@@ -163,6 +163,8 @@ const About = () => {
               <div className="w-2 h-2 border border-vintage-gold rotate-45"></div>
             </div>
 
+            {/* Skills Section */}
+            <div className={`transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {/* Skills/Practices */}
               <div className="bg-antique-white p-8 border border-vintage-gold/20">
                 <h3 className="text-xs tracking-[0.3em] uppercase text-vintage-gold mb-6 font-light">Areas of Practice</h3>
