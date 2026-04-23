@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { X, Music, Video } from 'lucide-react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { X, Music, Video, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import ProjectMediaPlayer from '../components/ProjectMediaPlayer';
 import RichText from '../components/RichText';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const SWIPE_THRESHOLD = 50; // px of horizontal movement to trigger navigation
 
 const Work = () => {
   useDocumentTitle('Work');
@@ -13,6 +14,7 @@ const Work = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const touchStartRef = useRef(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -34,6 +36,9 @@ const Work = () => {
   useEffect(() => {
     if (selectedProject) {
       document.body.style.overflow = 'hidden';
+      // Scroll modal back to top when switching projects via swipe / arrows
+      const modalScroll = document.querySelector('.fixed.inset-0.bg-warm-brown\\/95');
+      if (modalScroll) modalScroll.scrollTop = 0;
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -41,6 +46,52 @@ const Work = () => {
       document.body.style.overflow = 'unset';
     };
   }, [selectedProject]);
+
+  // Navigate prev/next within the projects list while the modal is open
+  const currentIndex = selectedProject
+    ? projects.findIndex((p) => p.id === selectedProject.id)
+    : -1;
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex >= 0 && currentIndex < projects.length - 1;
+
+  const goPrev = useCallback(() => {
+    if (hasPrev) setSelectedProject(projects[currentIndex - 1]);
+  }, [hasPrev, currentIndex, projects]);
+
+  const goNext = useCallback(() => {
+    if (hasNext) setSelectedProject(projects[currentIndex + 1]);
+  }, [hasNext, currentIndex, projects]);
+
+  // Keyboard arrow support for desktop
+  useEffect(() => {
+    if (!selectedProject) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') goPrev();
+      else if (e.key === 'ArrowRight') goNext();
+      else if (e.key === 'Escape') setSelectedProject(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selectedProject, goPrev, goNext]);
+
+  const handleTouchStart = (e) => {
+    const t = e.touches[0];
+    touchStartRef.current = { x: t.clientX, y: t.clientY };
+  };
+
+  const handleTouchEnd = (e) => {
+    const start = touchStartRef.current;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    touchStartRef.current = null;
+    // Only trigger on mostly-horizontal swipes to avoid fighting with vertical scroll
+    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      if (dx < 0) goNext();
+      else goPrev();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-vintage-cream">
@@ -150,7 +201,12 @@ const Work = () => {
       {selectedProject && (
         <div className="fixed inset-0 bg-warm-brown/95 z-50 overflow-y-auto animate-fadeIn">
           <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-6">
-            <div className="max-w-5xl mx-auto bg-vintage-cream relative">
+            <div
+              className="max-w-5xl mx-auto bg-vintage-cream relative"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              data-testid="project-modal"
+            >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedProject(null)}
@@ -160,6 +216,32 @@ const Work = () => {
               >
                 <X size={24} />
               </button>
+
+              {/* Prev button (desktop chevron) */}
+              {hasPrev && (
+                <button
+                  onClick={goPrev}
+                  aria-label="Previous project"
+                  data-testid="project-modal-prev"
+                  className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 text-vintage-cream hover:text-vintage-gold transition-colors duration-300 bg-warm-brown/70 hover:bg-warm-brown p-3 rounded-full items-center justify-center"
+                  style={{ minWidth: 44, minHeight: 44 }}
+                >
+                  <ChevronLeft size={24} />
+                </button>
+              )}
+
+              {/* Next button (desktop chevron) */}
+              {hasNext && (
+                <button
+                  onClick={goNext}
+                  aria-label="Next project"
+                  data-testid="project-modal-next"
+                  className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 text-vintage-cream hover:text-vintage-gold transition-colors duration-300 bg-warm-brown/70 hover:bg-warm-brown p-3 rounded-full items-center justify-center"
+                  style={{ minWidth: 44, minHeight: 44 }}
+                >
+                  <ChevronRight size={24} />
+                </button>
+              )}
 
               {/* Content */}
               <div className="p-4 md:p-8 lg:p-12">
@@ -213,6 +295,38 @@ const Work = () => {
                       content={selectedProject.summary || selectedProject.description}
                       className="text-[15px] md:text-lg text-sepia-dark/80 leading-[1.6] md:leading-relaxed font-light"
                     />
+                  </div>
+                )}
+
+                {/* Swipe hint + project counter */}
+                {projects.length > 1 && (
+                  <div
+                    className="md:hidden mt-8 pt-6 border-t border-vintage-gold/20 flex items-center justify-between text-xs tracking-wider uppercase text-sepia-dark/50 font-light"
+                    data-testid="project-modal-swipe-hint"
+                  >
+                    <button
+                      onClick={goPrev}
+                      disabled={!hasPrev}
+                      className="flex items-center gap-1 disabled:opacity-30 text-warm-brown"
+                      style={{ minHeight: 44 }}
+                      aria-label="Previous"
+                    >
+                      <ChevronLeft size={16} />
+                      <span>Prev</span>
+                    </button>
+                    <span>
+                      {currentIndex + 1} / {projects.length} · swipe
+                    </span>
+                    <button
+                      onClick={goNext}
+                      disabled={!hasNext}
+                      className="flex items-center gap-1 disabled:opacity-30 text-warm-brown"
+                      style={{ minHeight: 44 }}
+                      aria-label="Next"
+                    >
+                      <span>Next</span>
+                      <ChevronRight size={16} />
+                    </button>
                   </div>
                 )}
               </div>
