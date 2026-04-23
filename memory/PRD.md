@@ -331,3 +331,18 @@ Response: { posts: [...] }
 - Added `@tiptap/react`, `@tiptap/starter-kit`, `@tiptap/extension-link`, `dompurify` to package.json.
 - Verified via `testing_agent_v3_fork` iteration_5.json — 100% pass; DOMPurify confirmed to strip `<script>` tags on public render.
 
+
+
+**v2.2 - Feb 2026 - Project Media Player + Gallery Edit + Lightbox rewrite**
+- **Project media player fixed**: root cause was camelCase `mediaType`/`mediaUrl` lookup while DB stores snake_case. New `ProjectMediaPlayer.jsx` renders YouTube iframe (responsive 16:9, max 800px), HTML5 `<video controls>` for direct files / Cloudinary, or HTML5 `<audio controls>`. YouTube URL auto-detection takes priority over media_type (handles artists saving YouTube under audio).
+- **Project detail simplified**: removed Creative Process + Behind the Scenes everywhere — from public Work modal, AdminProjects form, Pydantic models (Project/Create/Update), and via idempotent startup migration on MongoDB (`$unset` cleaned 10 existing docs). Modal now shows: title → image → media player → description/summary.
+- **Gallery admin edit**: new PUT `/api/admin/gallery/{id}` with whitelist fields + old-Cloudinary-asset auto-delete on file replacement. AdminGallery rewritten with edit pencil button, pre-populated modal, instagram_url field, resource_type select.
+- **Public Gallery rewrite** (`GalleryItem.jsx` + `GalleryLightbox`):
+  - YouTube URLs → `img.youtube.com/vi/{id}/hqdefault.jpg` thumbnail + `/embed/{id}?autoplay=1` lightbox iframe
+  - Cloudinary videos → `/upload/so_0/` first-frame poster + HTML5 `<video controls autoplay>` in lightbox
+  - Images → normal thumbnail + image lightbox (max 900px)
+  - Per-item containment (position:relative, overflow:hidden) fixes caption bleed
+  - Lightbox rendered via `ReactDOM.createPortal` to `document.body` so z-index:9999 escapes parent stacking contexts (sits above navbar)
+  - ESC + outside-click close, body scroll lock, "View on Instagram" link when instagram_url set
+- Backend: public `/api/content/gallery` guarantees `resource_type` (defaults 'image') + `instagram_url` for legacy docs.
+- Verified via `testing_agent_v3_fork` iteration_6.json — backend 9/9 pytest, frontend 100% after portal fix.

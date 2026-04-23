@@ -35,37 +35,38 @@ const ProjectMediaPlayer = ({ mediaType, mediaUrl, title = '' }) => {
 
   const type = String(mediaType).toLowerCase();
 
-  if (type === 'video') {
-    const ytId = getYouTubeId(mediaUrl);
-    if (ytId) {
-      return (
-        <div
-          data-testid="project-youtube-embed"
-          className="w-full mx-auto"
-          style={{ maxWidth: '800px' }}
-        >
-          <div
-            style={{ position: 'relative', paddingTop: '56.25%', width: '100%' }}
-          >
-            <iframe
-              src={`https://www.youtube.com/embed/${ytId}`}
-              title={title || 'YouTube video'}
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                border: 0,
-              }}
-            />
-          </div>
+  // YouTube URLs render as an embed regardless of whether the field was
+  // tagged as video or audio — many artists save YouTube links under both.
+  const ytId = getYouTubeId(mediaUrl);
+  if (ytId) {
+    return (
+      <div
+        data-testid="project-youtube-embed"
+        className="w-full mx-auto"
+        style={{ maxWidth: '800px' }}
+      >
+        <div style={{ position: 'relative', paddingTop: '56.25%', width: '100%' }}>
+          <iframe
+            src={`https://www.youtube.com/embed/${ytId}`}
+            title={title || 'YouTube video'}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              border: 0,
+            }}
+          />
         </div>
-      );
-    }
+      </div>
+    );
+  }
+
+  if (type === 'video') {
     if (isDirectVideoFile(mediaUrl) || mediaUrl.includes('res.cloudinary.com')) {
       return (
         <video
@@ -78,7 +79,6 @@ const ProjectMediaPlayer = ({ mediaType, mediaUrl, title = '' }) => {
         />
       );
     }
-    // Unknown video URL — no player
     return null;
   }
 

@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { PlayCircle, X, ExternalLink, Instagram } from 'lucide-react';
 import { getYouTubeId } from './ProjectMediaPlayer';
 
@@ -120,7 +121,7 @@ const GalleryLightbox = ({ item, onClose }) => {
     if (e.target === e.currentTarget) onClose();
   };
 
-  return (
+  return createPortal(
     <div
       data-testid="gallery-lightbox"
       onClick={handleBackdropClick}
@@ -243,7 +244,8 @@ const GalleryLightbox = ({ item, onClose }) => {
           )}
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 };
 

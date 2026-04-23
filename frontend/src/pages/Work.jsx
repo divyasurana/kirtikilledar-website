@@ -179,14 +179,16 @@ const Work = () => {
                 </div>
 
                 {/* Main Image */}
-                <div className="relative mb-10">
-                  <div className="absolute inset-0 border border-warm-brown/20 z-10 pointer-events-none"></div>
-                  <img
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    className="w-full h-[500px] object-cover grayscale-[20%] sepia-[10%]"
-                  />
-                </div>
+                {selectedProject.image && (
+                  <div className="relative mb-10">
+                    <div className="absolute inset-0 border border-warm-brown/20 z-10 pointer-events-none"></div>
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="w-full h-[500px] object-cover grayscale-[20%] sepia-[10%]"
+                    />
+                  </div>
+                )}
 
                 {/* Media Player */}
                 {selectedProject.media_type && selectedProject.media_url && (
