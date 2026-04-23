@@ -20,9 +20,7 @@ const AdminProjects = () => {
     media_type: '',
     media_url: '',
     duration: '',
-    summary: '',
-    creative_process: '',
-    behind_scenes: ''
+    summary: ''
   });
   const [loading, setLoading] = useState(true);
 
@@ -76,7 +74,18 @@ const AdminProjects = () => {
 
   const handleEdit = (project) => {
     setEditingProject(project);
-    setFormData(project);
+    setFormData({
+      title: project.title || '',
+      type: project.type || 'Music',
+      category: project.category || 'singing',
+      year: project.year || new Date().getFullYear().toString(),
+      description: project.description || '',
+      image: project.image || '',
+      media_type: project.media_type || '',
+      media_url: project.media_url || '',
+      duration: project.duration || '',
+      summary: project.summary || ''
+    });
     setShowForm(true);
   };
 
@@ -103,9 +112,7 @@ const AdminProjects = () => {
       media_type: '',
       media_url: '',
       duration: '',
-      summary: '',
-      creative_process: '',
-      behind_scenes: ''
+      summary: ''
     });
   };
 
@@ -232,22 +239,6 @@ const AdminProjects = () => {
                 <RichTextEditor
                   value={formData.summary}
                   onChange={(html) => setFormData({ ...formData, summary: html })}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm mb-2">Creative Process</label>
-                <RichTextEditor
-                  value={formData.creative_process}
-                  onChange={(html) => setFormData({ ...formData, creative_process: html })}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm mb-2">Behind the Scenes</label>
-                <RichTextEditor
-                  value={formData.behind_scenes}
-                  onChange={(html) => setFormData({ ...formData, behind_scenes: html })}
                 />
               </div>
 

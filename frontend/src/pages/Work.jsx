@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, Music, Video } from 'lucide-react';
 import axios from 'axios';
-import AudioPlayer from '../components/AudioPlayer';
-import VideoPlayer from '../components/VideoPlayer';
+import ProjectMediaPlayer from '../components/ProjectMediaPlayer';
 import RichText from '../components/RichText';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
@@ -114,10 +113,10 @@ const Work = () => {
                       <span className="text-xs tracking-[0.3em] uppercase text-vintage-gold font-light">
                         {project.type}
                       </span>
-                      {project.mediaType === 'audio' && (
+                      {project.media_type === 'audio' && (
                         <Music size={14} className="text-vintage-gold" strokeWidth={1.5} />
                       )}
-                      {project.mediaType === 'video' && (
+                      {project.media_type === 'video' && (
                         <Video size={14} className="text-vintage-gold" strokeWidth={1.5} />
                       )}
                     </div>
@@ -135,7 +134,7 @@ const Work = () => {
                   
                   <div className="flex items-center gap-2 text-warm-brown group-hover:text-vintage-gold transition-colors duration-300">
                     <span className="text-sm tracking-wider uppercase font-light">
-                      {project.mediaType === 'audio' ? 'Listen & View Details' : 'Watch & View Details'}
+                      {project.media_type === 'audio' ? 'Listen & View Details' : 'Watch & View Details'}
                     </span>
                     <span className="text-lg">→</span>
                   </div>
@@ -164,25 +163,25 @@ const Work = () => {
               {/* Content */}
               <div className="p-8 lg:p-12">
                 {/* Header */}
-                <div className="mb-12">
+                <div className="mb-10">
                   <div className="flex justify-between items-start mb-4">
                     <span className="text-xs tracking-[0.3em] uppercase text-vintage-gold font-light">
                       {selectedProject.type}
                     </span>
                     <span className="text-sm text-sepia-dark/50 font-light">{selectedProject.year}</span>
                   </div>
-                  
+
                   <h2 className="text-4xl md:text-5xl font-display text-warm-brown mb-6 leading-tight">
                     {selectedProject.title}
                   </h2>
-                  
-                  <div className="w-20 h-0.5 bg-vintage-gold mb-6"></div>
+
+                  <div className="w-20 h-0.5 bg-vintage-gold"></div>
                 </div>
 
                 {/* Main Image */}
-                <div className="relative mb-12">
+                <div className="relative mb-10">
                   <div className="absolute inset-0 border border-warm-brown/20 z-10 pointer-events-none"></div>
-                  <img 
+                  <img
                     src={selectedProject.image}
                     alt={selectedProject.title}
                     className="w-full h-[500px] object-cover grayscale-[20%] sepia-[10%]"
@@ -190,91 +189,25 @@ const Work = () => {
                 </div>
 
                 {/* Media Player */}
-                {selectedProject.mediaType && (
-                  <div className="mb-12">
-                    <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light flex items-center gap-4">
-                      <div className="w-8 h-0.5 bg-vintage-gold"></div>
-                      {selectedProject.mediaType === 'audio' ? 'Audio Recording' : 'Performance Reel'}
-                    </h3>
-                    
-                    {selectedProject.mediaType === 'audio' ? (
-                      <AudioPlayer 
-                        url={selectedProject.mediaUrl}
-                        title={selectedProject.title}
-                      />
-                    ) : (
-                      <VideoPlayer 
-                        url={selectedProject.mediaUrl}
-                        title={selectedProject.title}
-                        thumbnail={selectedProject.image}
-                      />
-                    )}
+                {selectedProject.media_type && selectedProject.media_url && (
+                  <div className="mb-10">
+                    <ProjectMediaPlayer
+                      mediaType={selectedProject.media_type}
+                      mediaUrl={selectedProject.media_url}
+                      title={selectedProject.title}
+                    />
                   </div>
                 )}
 
-                {/* Project Summary */}
-                <div className="mb-12">
-                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light flex items-center gap-4">
-                    <div className="w-8 h-0.5 bg-vintage-gold"></div>
-                    Project Summary
-                  </h3>
-                  <div className="space-y-4">
-                    {selectedProject.summary ? (
-                      <RichText
-                        content={selectedProject.summary}
-                        className="text-lg text-sepia-dark/80 leading-relaxed font-light"
-                      />
-                    ) : (
-                      <p className="text-lg text-sepia-dark/80 leading-relaxed font-light">
-                        {selectedProject.description} This project represented an important exploration of {selectedProject.category === 'singing' ? 'musical expression and vocal technique' : 'character depth and emotional authenticity'}, allowing me to delve into {selectedProject.category === 'singing' ? 'the nuances of melody and rhythm' : 'the psychology of the character and their inner world'}.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Creative Process */}
-                <div className="mb-12 bg-vintage-paper p-8 border-l-2 border-vintage-gold">
-                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-6 font-light">
-                    Creative Process
-                  </h3>
-                  <div className="space-y-4">
-                    {selectedProject.creative_process ? (
-                      <RichText
-                        content={selectedProject.creative_process}
-                        className="text-sepia-dark/80 leading-relaxed font-light"
-                      />
-                    ) : (
-                      <>
-                        <p className="text-sepia-dark/80 leading-relaxed font-light">
-                          The preparation for this project began with extensive research and observation. I spent weeks {selectedProject.category === 'singing' ? 'studying the raga, understanding its emotional landscape, and finding my own voice within its classical framework' : 'building the character from the inside out—observing real people, understanding their motivations, and finding the truth in their contradictions'}.
-                        </p>
-                        <p className="text-sepia-dark/80 leading-relaxed font-light">
-                          What moved me most about this work was discovering the moments of vulnerability—the places where technique gives way to pure emotion, where the performance becomes something more than performance.
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Behind the Scenes */}
-                <div className="bg-antique-white p-8">
-                  <h3 className="text-sm tracking-[0.3em] uppercase text-sepia-dark mb-4 font-light">
-                    Behind the Scenes
-                  </h3>
-                  {selectedProject.behind_scenes ? (
+                {/* Description / Summary */}
+                {(selectedProject.summary || selectedProject.description) && (
+                  <div>
                     <RichText
-                      content={selectedProject.behind_scenes}
-                      className="text-sepia-dark/70 italic leading-relaxed font-light"
+                      content={selectedProject.summary || selectedProject.description}
+                      className="text-lg text-sepia-dark/80 leading-relaxed font-light"
                     />
-                  ) : (
-                    <p className="text-sepia-dark/70 italic leading-relaxed font-light">
-                      {selectedProject.category === 'singing' 
-                        ? '"The most challenging moment was finding the courage to let go of perfection and trust the silence between notes. That\'s where the music truly lives."'
-                        : '"The breakthrough came when I stopped trying to play the character and simply allowed myself to become her—to see the world through her eyes, to carry her burdens, to breathe her breath."'
-                      }
-                    </p>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

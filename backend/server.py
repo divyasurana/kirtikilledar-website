@@ -139,6 +139,12 @@ async def get_projects():
 @api_router.get("/content/gallery")
 async def get_gallery():
     images = await db.gallery_images.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    # Guarantee resource_type is present for backward compatibility
+    for item in images:
+        if not item.get("resource_type"):
+            item["resource_type"] = "image"
+        if "instagram_url" not in item:
+            item["instagram_url"] = ""
     return images
 
 @api_router.get("/content/contact")
@@ -221,6 +227,35 @@ async def startup_db_client():
         logging.info("✅ Cloudinary storage initialized")
     except Exception as e:
         logging.error(f"❌ Storage initialization failed: {e}")
+
+    # One-time migrations (idempotent)
+    try:
+        # Drop deprecated project fields from all documents
+        drop_result = await db.projects.update_many(
+            {"$or": [
+                {"creative_process": {"$exists": True}},
+                {"behind_scenes": {"$exists": True}},
+            ]},
+            {"$unset": {"creative_process": "", "behind_scenes": ""}},
+        )
+        if drop_result.modified_count:
+            logging.info(
+                f"🧹 Removed creative_process/behind_scenes from "
+                f"{drop_result.modified_count} project(s)"
+            )
+
+        # Backfill missing resource_type on gallery items (default "image")
+        gallery_backfill = await db.gallery_images.update_many(
+            {"resource_type": {"$exists": False}},
+            {"$set": {"resource_type": "image"}},
+        )
+        if gallery_backfill.modified_count:
+            logging.info(
+                f"🧹 Backfilled resource_type='image' on "
+                f"{gallery_backfill.modified_count} gallery item(s)"
+            )
+    except Exception as e:
+        logging.warning(f"⚠️ Startup migrations skipped: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

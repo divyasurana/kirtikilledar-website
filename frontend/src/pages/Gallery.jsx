@@ -1,57 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import { X, PlayCircle } from 'lucide-react';
 import axios from 'axios';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import { GalleryItem, GalleryLightbox } from '../components/GalleryItem';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Gallery = () => {
   useDocumentTitle('Gallery');
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [gallery, setGallery] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openItem, setOpenItem] = useState(null); // single global lightbox target
 
   useEffect(() => {
     setIsVisible(true);
     window.scrollTo(0, 0);
+    const fetchGallery = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/content/gallery`);
+        setGallery(response.data || []);
+      } catch (error) {
+        console.error('Error fetching gallery:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchGallery();
   }, []);
-
-  const fetchGallery = async () => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/api/content/gallery`);
-      setGallery(response.data || []);
-    } catch (error) {
-      console.error('Error fetching gallery:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedItem) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [selectedItem]);
 
   const categories = [
     { id: 'all', label: 'All' },
     { id: 'portraits', label: 'Portraits' },
     { id: 'moments', label: 'Moments' },
     { id: 'work', label: 'Work Stills' },
-    { id: 'behind', label: 'Behind the Scenes' }
+    { id: 'behind', label: 'Behind the Scenes' },
   ];
 
-  const filteredGallery = activeCategory === 'all' 
-    ? gallery 
-    : gallery.filter(item => item.category === activeCategory);
+  const filteredGallery =
+    activeCategory === 'all'
+      ? gallery
+      : gallery.filter((item) => item.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-vintage-cream">
@@ -64,12 +53,20 @@ const Gallery = () => {
               <div className="w-3 h-3 border border-vintage-gold rotate-45 mx-4"></div>
               <div className="w-16 h-0.5 bg-vintage-gold"></div>
             </div>
-            
-            <h1 className={`font-display text-6xl md:text-7xl text-warm-brown mb-8 leading-tight transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+
+            <h1
+              className={`font-display text-6xl md:text-7xl text-warm-brown mb-8 leading-tight transition-all duration-1000 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
               Gallery
             </h1>
-            
-            <p className={`text-xl text-sepia-dark/80 leading-relaxed italic max-w-2xl mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+
+            <p
+              className={`text-xl text-sepia-dark/80 leading-relaxed italic max-w-2xl mx-auto transition-all duration-1000 delay-300 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
               Moments frozen in time—each image a quiet meditation on presence, performance, and the space between.
             </p>
 
@@ -95,6 +92,7 @@ const Gallery = () => {
                     ? 'text-warm-brown border-b-2 border-vintage-gold'
                     : 'text-sepia-dark/50 hover:text-warm-brown'
                 }`}
+                data-testid={`gallery-filter-${category.id}`}
               >
                 {category.label}
               </button>
@@ -113,53 +111,20 @@ const Gallery = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
-                {filteredGallery.map((item, index) => (
-                  <div
+                {filteredGallery.map((item) => (
+                  <GalleryItem
                     key={item.id}
-                    className={`group cursor-pointer transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                    style={{ transitionDelay: `${index * 100}ms` }}
-                    onClick={() => setSelectedItem(item)}
-                  >
-                    <div className="relative overflow-hidden mb-4">
-                      <div className="absolute inset-0 border border-warm-brown/10 z-10 pointer-events-none group-hover:border-vintage-gold/40 transition-colors duration-300"></div>
-                      
-                      {item.resource_type === 'video' ? (
-                        <div className="relative w-full h-[380px] bg-black">
-                          <video 
-                            src={item.image_url}
-                            className="w-full h-full object-contain grayscale-[35%] sepia-[18%]"
-                          />
-                          {/* Play button overlay */}
-                          <div className="absolute inset-0 flex items-center justify-center bg-warm-brown/20 group-hover:bg-warm-brown/30 transition-colors duration-300">
-                            <PlayCircle 
-                              size={64} 
-                              className="text-vintage-cream opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300"
-                              strokeWidth={1.5}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <img 
-                          src={item.image_url}
-                          alt={item.caption}
-                          className="w-full h-[380px] object-cover grayscale-[35%] sepia-[18%] transition-all duration-700 group-hover:grayscale-[15%] group-hover:scale-105"
-                        />
-                      )}
-                      
-                      {/* Subtle overlay on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-warm-brown/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    </div>
-                    
-                    <p className="text-sm text-sepia-dark/60 group-hover:text-vintage-gold transition-colors duration-300 font-light text-center">
-                      {item.caption}
-                    </p>
-                  </div>
+                    item={item}
+                    onOpen={(it) => setOpenItem(it)}
+                  />
                 ))}
               </div>
 
               {filteredGallery.length === 0 && (
                 <div className="text-center py-20">
-                  <p className="text-sepia-dark/50 text-lg italic">No media in this category yet.</p>
+                  <p className="text-sepia-dark/50 text-lg italic">
+                    No media in this category yet.
+                  </p>
                 </div>
               )}
             </>
@@ -167,63 +132,7 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* Lightbox Modal */}
-      {selectedItem && (
-        <div 
-          className="fixed inset-0 bg-warm-brown/97 z-50 flex items-center justify-center p-6 cursor-pointer animate-fadeIn"
-          onClick={() => setSelectedItem(null)}
-        >
-          <button
-            className="absolute top-8 right-8 text-vintage-cream hover:text-vintage-gold transition-colors duration-300 z-10"
-            onClick={() => setSelectedItem(null)}
-            aria-label="Close"
-          >
-            <X size={32} strokeWidth={1.5} />
-          </button>
-
-          <div className="max-w-6xl max-h-[85vh] relative" onClick={(e) => e.stopPropagation()}>
-            {selectedItem.resource_type === 'video' ? (
-              <div className="relative">
-                <div className="absolute -inset-2 border border-vintage-gold/30 pointer-events-none"></div>
-                
-                <video 
-                  src={selectedItem.image_url}
-                  controls
-                  autoPlay
-                  className="w-full max-h-[75vh] object-contain bg-black"
-                />
-                
-                {/* Corner ornaments */}
-                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-vintage-gold"></div>
-                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-vintage-gold"></div>
-                <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-vintage-gold"></div>
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-vintage-gold"></div>
-              </div>
-            ) : (
-              <div className="relative">
-                <div className="absolute -inset-2 border border-vintage-gold/30 pointer-events-none"></div>
-                
-                <img 
-                  src={selectedItem.image_url}
-                  alt={selectedItem.caption}
-                  className="w-full h-auto max-h-[75vh] object-contain grayscale-[25%] sepia-[12%]"
-                />
-                
-                {/* Corner ornaments */}
-                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-vintage-gold"></div>
-                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-vintage-gold"></div>
-                <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-vintage-gold"></div>
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-vintage-gold"></div>
-              </div>
-            )}
-            
-            {/* Caption */}
-            <p className="text-vintage-cream text-center mt-8 text-lg font-light">
-              {selectedItem.caption}
-            </p>
-          </div>
-        </div>
-      )}
+      <GalleryLightbox item={openItem} onClose={() => setOpenItem(null)} />
     </div>
   );
 };

@@ -1,0 +1,66 @@
+{
+  "summary": "Iteration 6 (Jan 2026) — verified all 4 fixes for Kirti Killedar portfolio: (1) Project media player on /work modal correctly reads snake_case media_type/media_url — YouTube embed, HTML5 video and HTML5 audio all render with proper data-testids. (2) Creative Process + Behind the Scenes fully removed: absent from public /api/content/projects, absent from admin GET /api/admin/projects (startup migration confirmed), absent from modal DOM on /work, absent from Admin Projects Add form. (3) Admin gallery edit works: gallery-edit-btn-{id} testid present, modal has instagram_url field + Save Changes, PUT /api/admin/gallery/{id} updates caption+instagram_url, clearing instagram_url persists empty string, unknown id → 404. (4) Public /gallery rewrite verified: YouTube thumbnail uses img.youtube.com/vi/{id}/hqdefault.jpg, Cloudinary video uses /upload/so_0/ poster, lightbox is position:fixed with iframe src containing ?autoplay=1, body.overflow locked to 'hidden' when open and restored ('') on ESC close, 'View on Instagram' link renders, gallery item wrappers all computed position:relative + overflow:hidden, backdrop click in lower region closes lightbox. Backend pytest: 9/9 passed.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "GalleryLightbox", "issue": "Navbar (position:fixed z-50) renders ABOVE the lightbox at top ~80px region despite lightbox having z-index:9999. Cause: lightbox is inside a parent that creates its own stacking context (likely a transformed/filtered ancestor), so z:9999 is scoped. Visual effect: site header with logo + nav links stays visible overlaid on the dark backdrop; clicking in top region hits NAV instead of backdrop so lightbox doesn't close from that strip. Backdrop click in the rest of the viewport works fine, ESC works, inner content click does NOT close. Recommend rendering GalleryLightbox via ReactDOM.createPortal to document.body.", "selector": "[data-testid='gallery-lightbox']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "/work project modal (audio type)", "issues": ["When project.media_type='audio' and media_url is a YouTube link, ProjectMediaPlayer takes the audio branch and renders <audio src='https://youtu.be/...'> which the browser cannot actually play. Likely the admin should upload a direct audio URL for audio type, OR the component should detect YouTube URL regardless of type. Currently shows a non-functional audio bar for such projects. Not in stated scope — flag for main agent."]},
+      {"screen": "/work project modal (YouTube iframe)", "issues": ["React console warning: 'An empty string was passed to the src attribute' — likely the Main Image <img src={selectedProject.image}> receives '' when project has no explicit image; consider guarding with `src || null`. Cosmetic only."]}
+    ],
+    "verified_working": [
+      {"component": "Work /work project cards", "status": "media_type badge (Music for audio, Video for video) renders next to type label"},
+      {"component": "Work modal YouTube", "status": "data-testid='project-youtube-embed' wrapper present; iframe src=https://www.youtube.com/embed/HejAgvIZamY"},
+      {"component": "Work modal HTML5 audio", "status": "data-testid='project-html5-audio' rendered on audio-type project"},
+      {"component": "Work modal content", "status": "No 'Creative Process' / 'Behind the Scenes' text anywhere in modal body"},
+      {"component": "Admin Projects Add modal", "status": "No Creative Process / Behind the Scenes labels or RTE fields"},
+      {"component": "Admin Gallery grid", "status": "gallery-edit-btn-{id} + gallery-delete-btn-{id} present on each item; edit modal has instagram_url input + Save Changes button"},
+      {"component": "Public /gallery YouTube item", "status": "<img src=https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg> as thumbnail — no raw watch?v= URLs in <img> src"},
+      {"component": "Public /gallery Cloudinary video poster", "status": "<img src=https://res.cloudinary.com/demo/video/upload/so_0/dog.jpg> used for grid poster"},
+      {"component": "GalleryLightbox YouTube", "status": "iframe src=https://www.youtube.com/embed/{id}?autoplay=1 — autoplay param confirmed"},
+      {"component": "GalleryLightbox Cloudinary video", "status": "<video controls src=...mp4> rendered"},
+      {"component": "GalleryLightbox scroll lock", "status": "document.body.style.overflow=='hidden' while open; restored to '' after ESC"},
+      {"component": "GalleryLightbox Instagram link", "status": "'View on Instagram' <a> present when instagram_url set"},
+      {"component": "GalleryLightbox ESC close", "status": "iframe and lightbox removed from DOM after Escape keypress"},
+      {"component": "Gallery item containment", "status": "Every [data-testid^='gallery-item-'] has computed position:relative and overflow:hidden"}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter6_fixes.py",
+    "/app/test_reports/pytest/iter6_results.xml"
+  ],
+  "action_items": [
+    "LOW: Render GalleryLightbox via ReactDOM.createPortal(<Lightbox/>, document.body) so z-index:9999 escapes the parent stacking context and truly covers the site navbar. Currently the navbar is visible over the backdrop and a click in the top ~80px strip fails to close the lightbox.",
+    "INFO: For projects where media_type='audio' but media_url is a YouTube link (e.g., 'Odh Tujhi'), <audio> cannot play the YouTube URL. Consider falling back to the YouTube branch when getYouTubeId(media_url) returns a match, regardless of media_type. Not in original scope but a usability issue.",
+    "COSMETIC: /work modal renders <img src=''> when selectedProject.image is empty — guard with `src={selectedProject.image || undefined}` to silence React warning."
+  ],
+  "critical_code_review_comments": [
+    "admin_routes.py PUT /api/admin/gallery/{id}: whitelist approach (caption, category, resource_type, image_url, public_id, instagram_url) is clean; old-Cloudinary-asset delete is wrapped in try/except so DB write still succeeds. Good.",
+    "server.py startup migration is idempotent (only updates docs that still have the fields); safe to leave in place permanently.",
+    "server.py /api/content/gallery enrichment mutates the list returned by Motor; fine for small lists but would be nicer to use a projection or a Pydantic response model.",
+    "GalleryItem.jsx handleBackdropClick uses e.target === e.currentTarget — correct pattern. The real issue is stacking context (see action item #1), not the handler.",
+    "ProjectMediaPlayer.jsx branches on `type` first then checks getYouTubeId — means an audio-typed project with a YouTube URL never hits the YouTube branch. See action item #2."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter6_fixes.py (new)"
+  ],
+  "success_rate": {
+    "backend": "100% (9/9 pytest passed)",
+    "frontend": "~95% — all 4 fix areas work as specified; 1 LOW stacking-context issue on lightbox (navbar visible through backdrop top strip)"
+  },
+  "test_credentials": {
+    "admin_username": "admin",
+    "admin_password": "Kirti2024!",
+    "source": "/app/memory/test_credentials.md"
+  },
+  "seed_data_creation": "Created 2 TEST_ gallery items (TEST_YT_iter6 with YouTube URL + instagram_url, TEST_VID_iter6 with Cloudinary demo mp4) via POST /api/admin/gallery to exercise YouTube-thumbnail and video-poster + lightbox paths. Both deleted via DELETE /api/admin/gallery/{id} after tests. Residual PUT-tested image TEST_iter6_image and TEST_iter6_youtube from pytest are auto-cleaned up by the fixture teardown. Verified /api/content/gallery at end of run — no leftover TEST_* items.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "All 4 fixes shipped in iteration 6 are working. The only bug worth addressing is the lightbox z-index/stacking-context issue: navbar (z-50 fixed) sits above the lightbox (z-9999 fixed) because the lightbox is nested inside a parent that creates a stacking context. Fix is to portal the lightbox into document.body. Also note the audio+YouTube-URL edge case in ProjectMediaPlayer. Backend pytest at /app/backend/tests/test_iter6_fixes.py is self-contained and can be re-run as regression.",
+  "rca of the issue": "Lightbox navbar overlap — root cause is React stacking context: <GalleryLightbox> is rendered as a sibling inside <GalleryPage> which is likely inside a main/section with its own transform/isolation/z-index creating a new stacking context. CSS z-index is scoped to the nearest ancestor stacking context, so z:9999 only competes with other elements in that context — NOT with the site-wide position:fixed navbar that lives in a higher context. Mitigation: wrap the lightbox in ReactDOM.createPortal(<Lightbox/>, document.body) so it is appended directly to <body> and its z-index is compared at the document root. No backend change required."
+}

@@ -45,8 +45,6 @@ class Project(BaseModel):
     media_url: Optional[str] = None
     duration: Optional[str] = None
     summary: str
-    creative_process: str
-    behind_scenes: str
     order: int = 0
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -62,8 +60,6 @@ class ProjectCreate(BaseModel):
     media_url: Optional[str] = None
     duration: Optional[str] = None
     summary: str
-    creative_process: str
-    behind_scenes: str
 
 class ProjectUpdate(BaseModel):
     title: Optional[str] = None
@@ -76,8 +72,6 @@ class ProjectUpdate(BaseModel):
     media_url: Optional[str] = None
     duration: Optional[str] = None
     summary: Optional[str] = None
-    creative_process: Optional[str] = None
-    behind_scenes: Optional[str] = None
 
 # Gallery Image Model
 class GalleryImage(BaseModel):
@@ -87,6 +81,7 @@ class GalleryImage(BaseModel):
     category: str
     resource_type: str = "image"  # "image" or "video"
     public_id: Optional[str] = None  # Cloudinary public ID for deletion
+    instagram_url: Optional[str] = ""
     order: int = 0
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -96,6 +91,7 @@ class GalleryImageCreate(BaseModel):
     category: str
     resource_type: str = "image"
     public_id: Optional[str] = None
+    instagram_url: Optional[str] = ""
 
 # Contact Info Model
 class ContactInfo(BaseModel):

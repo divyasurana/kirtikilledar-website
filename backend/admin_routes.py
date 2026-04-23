@@ -194,6 +194,43 @@ async def add_gallery_image(data: dict, user: dict = Depends(verify_token)):
     await db.gallery_images.insert_one(data)
     return {"message": "Image added", "id": data["id"]}
 
+@router.put("/gallery/{image_id}")
+async def update_gallery_image(image_id: str, data: dict, user: dict = Depends(verify_token)):
+    """
+    Update a gallery item.
+
+    If `data["image_url"]` has changed and the old item has a `public_id`,
+    the old Cloudinary asset is deleted (best-effort — DB write still succeeds).
+    Allowed fields: caption, category, resource_type, image_url, public_id, instagram_url.
+    Unknown fields are dropped.
+    """
+    from server import db
+    from storage import delete_object
+    import logging
+
+    existing = await db.gallery_images.find_one({"id": image_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Gallery item not found")
+
+    allowed = {"caption", "category", "resource_type", "image_url", "public_id", "instagram_url"}
+    update = {k: v for k, v in (data or {}).items() if k in allowed}
+
+    # If the image_url is being replaced, delete the old Cloudinary asset
+    new_url = update.get("image_url")
+    old_url = existing.get("image_url")
+    old_public_id = existing.get("public_id")
+    if new_url and old_url and new_url != old_url and old_public_id:
+        try:
+            old_resource_type = existing.get("resource_type", "image")
+            delete_object(old_public_id, resource_type=old_resource_type)
+            logging.info(f"✅ Replaced — old Cloudinary asset deleted: {old_public_id}")
+        except Exception as e:
+            logging.warning(f"⚠️ Could not delete old Cloudinary asset: {e}")
+
+    update["updated_at"] = datetime.utcnow()
+    await db.gallery_images.update_one({"id": image_id}, {"$set": update})
+    return {"message": "Gallery item updated"}
+
 @router.delete("/gallery/{image_id}")
 async def delete_gallery_image(image_id: str, user: dict = Depends(verify_token)):
     from server import db
