@@ -149,50 +149,55 @@ const Work = () => {
       {/* Project Detail Modal */}
       {selectedProject && (
         <div className="fixed inset-0 bg-warm-brown/95 z-50 overflow-y-auto animate-fadeIn">
-          <div className="min-h-screen py-12 px-6">
+          <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-6">
             <div className="max-w-5xl mx-auto bg-vintage-cream relative">
               {/* Close Button */}
               <button
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-6 right-6 z-10 text-warm-brown hover:text-vintage-gold transition-colors duration-300 bg-vintage-cream p-3 border border-warm-brown/20"
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 text-warm-brown hover:text-vintage-gold transition-colors duration-300 bg-vintage-cream p-3 border border-warm-brown/20"
                 aria-label="Close"
+                style={{ minWidth: 44, minHeight: 44 }}
               >
                 <X size={24} />
               </button>
 
               {/* Content */}
-              <div className="p-8 lg:p-12">
+              <div className="p-4 md:p-8 lg:p-12">
                 {/* Header */}
-                <div className="mb-10">
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="text-xs tracking-[0.3em] uppercase text-vintage-gold font-light">
+                <div className="mb-6 md:mb-10">
+                  <div className="flex justify-between items-start mb-3 md:mb-4 gap-2">
+                    <span className="text-[11px] md:text-xs tracking-[0.25em] md:tracking-[0.3em] uppercase text-vintage-gold font-light">
                       {selectedProject.type}
                     </span>
-                    <span className="text-sm text-sepia-dark/50 font-light">{selectedProject.year}</span>
+                    <span className="text-xs md:text-sm text-sepia-dark/50 font-light flex-shrink-0">
+                      {selectedProject.year}
+                    </span>
                   </div>
 
-                  <h2 className="text-4xl md:text-5xl font-display text-warm-brown mb-6 leading-tight">
+                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-display text-warm-brown mb-4 md:mb-6 leading-tight break-words">
                     {selectedProject.title}
                   </h2>
 
-                  <div className="w-20 h-0.5 bg-vintage-gold"></div>
+                  <div className="w-16 md:w-20 h-0.5 bg-vintage-gold"></div>
                 </div>
 
                 {/* Main Image */}
                 {selectedProject.image && (
-                  <div className="relative mb-10">
-                    <div className="absolute inset-0 border border-warm-brown/20 z-10 pointer-events-none"></div>
+                  <div className="relative mb-6 md:mb-10">
+                    <div className="absolute inset-0 border border-warm-brown/20 z-10 pointer-events-none rounded-lg md:rounded-none"></div>
                     <img
                       src={selectedProject.image}
                       alt={selectedProject.title}
-                      className="w-full h-[500px] object-cover grayscale-[20%] sepia-[10%]"
+                      className="w-full object-cover grayscale-[20%] sepia-[10%] rounded-lg md:rounded-none"
+                      style={{ maxHeight: '50vh' }}
+                      data-testid="project-modal-image"
                     />
                   </div>
                 )}
 
                 {/* Media Player */}
                 {selectedProject.media_type && selectedProject.media_url && (
-                  <div className="mb-10">
+                  <div className="mb-6 md:mb-10">
                     <ProjectMediaPlayer
                       mediaType={selectedProject.media_type}
                       mediaUrl={selectedProject.media_url}
@@ -206,7 +211,7 @@ const Work = () => {
                   <div>
                     <RichText
                       content={selectedProject.summary || selectedProject.description}
-                      className="text-lg text-sepia-dark/80 leading-relaxed font-light"
+                      className="text-[15px] md:text-lg text-sepia-dark/80 leading-[1.6] md:leading-relaxed font-light"
                     />
                   </div>
                 )}

@@ -302,3 +302,14 @@ html {
 .rich-text-editor-content:focus-visible {
     outline: none;
 }
+
+/* Best-effort: hide the Emergent preview badge. This badge is injected only on
+   *.preview.emergentagent.com previews and will not appear on the production
+   domain (kirtikilledar.com). Targeting common badge selectors. */
+a[href*="emergent.sh"],
+a[href*="emergentagent.com"][target="_blank"],
+.emergent-badge,
+#emergent-badge,
+[data-emergent-badge] {
+    display: none !important;
+}

@@ -45,7 +45,16 @@ const ProjectMediaPlayer = ({ mediaType, mediaUrl, title = '' }) => {
         className="w-full mx-auto"
         style={{ maxWidth: '800px' }}
       >
-        <div style={{ position: 'relative', paddingTop: '56.25%', width: '100%' }}>
+        <div
+          style={{
+            position: 'relative',
+            paddingBottom: '56.25%',
+            height: 0,
+            overflow: 'hidden',
+            width: '100%',
+            minHeight: '200px',
+          }}
+        >
           <iframe
             src={`https://www.youtube.com/embed/${ytId}`}
             title={title || 'YouTube video'}

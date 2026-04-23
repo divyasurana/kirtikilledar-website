@@ -58,7 +58,7 @@ const Navigation = () => {
           <div className="flex justify-between items-center py-6">
             <Link
               to="/"
-              className="text-2xl font-display text-warm-brown hover:text-vintage-gold transition-colors duration-300"
+              className="text-xl sm:text-2xl font-display text-warm-brown hover:text-vintage-gold transition-colors duration-300 truncate max-w-[60%] sm:max-w-none"
               data-testid="nav-logo"
             >
               Kirti Killedar
@@ -84,9 +84,10 @@ const Navigation = () => {
             {/* Mobile Hamburger — matches admin-panel styling */}
             <button
               onClick={() => setIsOpen(true)}
-              className="md:hidden text-warm-brown p-2 hover:text-vintage-gold transition-colors duration-300"
+              className="md:hidden text-warm-brown hover:text-vintage-gold transition-colors duration-300 flex items-center justify-center"
               aria-label="Open menu"
               data-testid="nav-hamburger"
+              style={{ minWidth: 44, minHeight: 44 }}
             >
               <Menu size={28} strokeWidth={1.5} />
             </button>
